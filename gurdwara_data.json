@@ -1,0 +1,412 @@
+{
+  "topSikhCities": [
+    {
+      "rank": 1,
+      "city": "Surrey",
+      "country": "Canada",
+      "province": "BC",
+      "population_percentage": 42,
+      "notes": "Largest Sikh settlement outside Punjab, BC region",
+      "latitude": 49.1913,
+      "longitude": -122.3045
+    },
+    {
+      "rank": 2,
+      "city": "Richmond Hill",
+      "country": "Canada",
+      "province": "ON",
+      "population_percentage": 38,
+      "notes": "Significant Sikh community near Toronto",
+      "latitude": 43.8509,
+      "longitude": -79.2304
+    },
+    {
+      "rank": 3,
+      "city": "Livingston",
+      "country": "USA",
+      "state": "CA",
+      "population_percentage": 17,
+      "notes": "CA city with one of the highest Sikh percentages",
+      "latitude": 37.6388,
+      "longitude": -120.7581
+    },
+    {
+      "rank": 4,
+      "city": "Yuba City",
+      "country": "USA",
+      "state": "CA",
+      "population_percentage": 14.5,
+      "notes": "Known for Sikh agricultural community and multiple gurdwaras",
+      "latitude": 39.1424,
+      "longitude": -121.6104
+    },
+    {
+      "rank": 5,
+      "city": "Carteret",
+      "country": "USA",
+      "state": "NJ",
+      "population_percentage": 12,
+      "notes": "Highest concentration in New Jersey",
+      "latitude": 40.5748,
+      "longitude": -74.2181
+    },
+    {
+      "rank": 6,
+      "city": "Fowler",
+      "country": "USA",
+      "state": "CA",
+      "population_percentage": 13,
+      "notes": "Strong Sikh community in California",
+      "latitude": 36.6133,
+      "longitude": -120.5533
+    },
+    {
+      "rank": 7,
+      "city": "Kerman",
+      "country": "USA",
+      "state": "CA",
+      "population_percentage": 8.3,
+      "notes": "Sikh hub in California's Central Valley",
+      "latitude": 36.4131,
+      "longitude": -120.0639
+    },
+    {
+      "rank": 8,
+      "city": "Live Oak",
+      "country": "USA",
+      "state": "CA",
+      "population_percentage": 7.9,
+      "notes": "Concentrated Sikh presence",
+      "latitude": 39.3008,
+      "longitude": -121.8458
+    },
+    {
+      "rank": 9,
+      "city": "Union City",
+      "country": "USA",
+      "state": "CA",
+      "population_percentage": 6.64,
+      "notes": "Bay Area Sikh community presence",
+      "latitude": 37.5915,
+      "longitude": -122.0181
+    },
+    {
+      "rank": 10,
+      "city": "Lathrop",
+      "country": "USA",
+      "state": "CA",
+      "population_percentage": 5.72,
+      "notes": "Central California Sikh population",
+      "latitude": 37.8483,
+      "longitude": -121.2719
+    }
+  ],
+  "gurdwaras": [
+    {
+      "name": "Guru Nanak Sikh Gurdwara",
+      "city": "Surrey",
+      "state": "BC",
+      "country": "Canada",
+      "latitude": 49.1913,
+      "longitude": -122.3045,
+      "type": "Major"
+    },
+    {
+      "name": "Gur Sikh Temple",
+      "city": "Abbotsford",
+      "state": "BC",
+      "country": "Canada",
+      "latitude": 49.0504,
+      "longitude": -122.3045,
+      "type": "Major"
+    },
+    {
+      "name": "Khalsa Diwan Society Vancouver",
+      "city": "Vancouver",
+      "state": "BC",
+      "country": "Canada",
+      "latitude": 49.2827,
+      "longitude": -123.1207,
+      "type": "Major"
+    },
+    {
+      "name": "Ontario Khalsa Darbar",
+      "city": "Mississauga",
+      "state": "ON",
+      "country": "Canada",
+      "latitude": 43.5890,
+      "longitude": -79.6441,
+      "type": "Major"
+    },
+    {
+      "name": "Gurdwara Sahib of San Jose",
+      "city": "San Jose",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 37.3382,
+      "longitude": -121.8863,
+      "type": "Major"
+    },
+    {
+      "name": "Gurdwara Sahib Yuba City",
+      "city": "Yuba City",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 39.1424,
+      "longitude": -121.6104,
+      "type": "Major"
+    },
+    {
+      "name": "Gurdwara Sahib Sikh Temple",
+      "city": "Stockton",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 37.9577,
+      "longitude": -121.2908,
+      "type": "Major"
+    },
+    {
+      "name": "Gurdwara Sahib Fremont",
+      "city": "Fremont",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 37.5485,
+      "longitude": -121.9886,
+      "type": "Major"
+    },
+    {
+      "name": "Gurdwara Guru Ravidass Sabha",
+      "city": "Union City",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 37.5915,
+      "longitude": -122.0181,
+      "type": "Standard"
+    },
+    {
+      "name": "The Sikh Foundation of the North Bay/Santa Rosa Gurdwara Sahib",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 38.4404,
+      "longitude": -122.7141,
+      "type": "Standard"
+    },
+    {
+      "name": "Sikh Center of San Francisco Bay Area",
+      "city": "El Sobrante",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 37.8864,
+      "longitude": -122.2544,
+      "type": "Standard"
+    },
+    {
+      "name": "Khalsa Care Foundation",
+      "city": "Pacoima",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 34.4549,
+      "longitude": -118.4514,
+      "type": "Standard"
+    },
+    {
+      "name": "Hollywood Sikh Gurdwara",
+      "city": "Los Angeles",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 34.1899,
+      "longitude": -118.3514,
+      "type": "Standard"
+    },
+    {
+      "name": "Sikh Temple of Bakersfield",
+      "city": "Bakersfield",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 35.3733,
+      "longitude": -119.0187,
+      "type": "Standard"
+    },
+    {
+      "name": "Gurdwara Guru Ravidas Temple",
+      "city": "Pittsburg",
+      "state": "CA",
+      "country": "USA",
+      "latitude": 37.9577,
+      "longitude": -121.8844,
+      "type": "Standard"
+    },
+    {
+      "name": "The National Gurdwara",
+      "city": "Washington",
+      "state": "DC",
+      "country": "USA",
+      "latitude": 38.9072,
+      "longitude": -77.0369,
+      "type": "Major"
+    },
+    {
+      "name": "Sikh Gurdwara of Tampa Bay",
+      "city": "Thonotosassa",
+      "state": "FL",
+      "country": "USA",
+      "latitude": 28.1497,
+      "longitude": -82.3105,
+      "type": "Standard"
+    },
+    {
+      "name": "Gurdwara Sahib-Sikh Study Circle",
+      "city": "Stonecrest",
+      "state": "GA",
+      "country": "USA",
+      "latitude": 33.7537,
+      "longitude": -84.1797,
+      "type": "Standard"
+    },
+    {
+      "name": "Sikh Religious Society of Chicago",
+      "city": "Palatine",
+      "state": "IL",
+      "country": "USA",
+      "latitude": 42.1141,
+      "longitude": -88.0086,
+      "type": "Major"
+    },
+    {
+      "name": "Gurdwara Sahib of Chicago",
+      "city": "Chicago",
+      "state": "IL",
+      "country": "USA",
+      "latitude": 41.8781,
+      "longitude": -87.6298,
+      "type": "Standard"
+    },
+    {
+      "name": "Guru Nanak Foundation of America",
+      "city": "Silver Spring",
+      "state": "MD",
+      "country": "USA",
+      "latitude": 39.0064,
+      "longitude": -77.0369,
+      "type": "Standard"
+    },
+    {
+      "name": "Singh Sabha of Michigan",
+      "city": "Canton",
+      "state": "MI",
+      "country": "USA",
+      "latitude": 42.3063,
+      "longitude": -83.4855,
+      "type": "Standard"
+    },
+    {
+      "name": "Sikh Study Circle of St. Louis",
+      "city": "St. Louis",
+      "state": "MO",
+      "country": "USA",
+      "latitude": 38.6270,
+      "longitude": -90.1994,
+      "type": "Standard"
+    },
+    {
+      "name": "Glen Cove Gurdwara",
+      "city": "Glen Cove",
+      "state": "NY",
+      "country": "USA",
+      "latitude": 40.8657,
+      "longitude": -73.6267,
+      "type": "Standard"
+    },
+    {
+      "name": "Manhattan Sikh Center",
+      "city": "New York",
+      "state": "NY",
+      "country": "USA",
+      "latitude": 40.7128,
+      "longitude": -74.0060,
+      "type": "Major"
+    },
+    {
+      "name": "Sikh Center of New York Inc",
+      "city": "Flushing",
+      "state": "NY",
+      "country": "USA",
+      "latitude": 40.7614,
+      "longitude": -73.8298,
+      "type": "Standard"
+    },
+    {
+      "name": "Gurudwara Sahib Guru Nanak Darbar",
+      "city": "Columbus",
+      "state": "OH",
+      "country": "USA",
+      "latitude": 39.9612,
+      "longitude": -82.9988,
+      "type": "Standard"
+    },
+    {
+      "name": "Sikh Gurdwara of Eugene",
+      "city": "Eugene",
+      "state": "OR",
+      "country": "USA",
+      "latitude": 44.0521,
+      "longitude": -123.0868,
+      "type": "Standard"
+    },
+    {
+      "name": "Gurdwara Sahib Charlotte",
+      "city": "Charlotte",
+      "state": "NC",
+      "country": "USA",
+      "latitude": 35.2271,
+      "longitude": -80.8431,
+      "type": "Standard"
+    },
+    {
+      "name": "Sikh Religious Society of South Carolina",
+      "city": "Columbia",
+      "state": "SC",
+      "country": "USA",
+      "latitude": 34.0007,
+      "longitude": -81.0348,
+      "type": "Standard"
+    },
+    {
+      "name": "Nashville Gurdwara",
+      "city": "Nashville",
+      "state": "TN",
+      "country": "USA",
+      "latitude": 36.1627,
+      "longitude": -86.7816,
+      "type": "Standard"
+    },
+    {
+      "name": "Gurdwara Singh Sabha",
+      "city": "Renton",
+      "state": "WA",
+      "country": "USA",
+      "latitude": 47.4829,
+      "longitude": -122.2171,
+      "type": "Standard"
+    },
+    {
+      "name": "Gurdwara Dashmesh Darbar",
+      "city": "Tacoma",
+      "state": "WA",
+      "country": "USA",
+      "latitude": 47.2529,
+      "longitude": -122.4443,
+      "type": "Standard"
+    },
+    {
+      "name": "Sikh Religious Society of Wisconsin",
+      "city": "Brookfield",
+      "state": "WI",
+      "country": "USA",
+      "latitude": 43.0705,
+      "longitude": -88.1047,
+      "type": "Standard"
+    }
+  ]
+}
