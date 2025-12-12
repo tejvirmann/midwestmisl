@@ -134,7 +134,7 @@
       "city": "Mississauga",
       "state": "ON",
       "country": "Canada",
-      "latitude": 43.5890,
+      "latitude": 43.589,
       "longitude": -79.6441,
       "type": "Major"
     },
@@ -305,7 +305,7 @@
       "city": "St. Louis",
       "state": "MO",
       "country": "USA",
-      "latitude": 38.6270,
+      "latitude": 38.627,
       "longitude": -90.1994,
       "type": "Standard"
     },
@@ -324,7 +324,7 @@
       "state": "NY",
       "country": "USA",
       "latitude": 40.7128,
-      "longitude": -74.0060,
+      "longitude": -74.006,
       "type": "Major"
     },
     {
@@ -407,6 +407,17 @@
       "latitude": 43.0705,
       "longitude": -88.1047,
       "type": "Standard"
+    },
+    {
+      "name": "Example Gurdwara",
+      "city": "Madison",
+      "state": "WI",
+      "country": "USA",
+      "latitude": null,
+      "longitude": null,
+      "type": "Standard",
+      "address": "1402 Bellflower Ln",
+      "notes": "test"
     }
   ]
 }
