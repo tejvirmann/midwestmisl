@@ -29,7 +29,7 @@ async function startServer() {
 
       // Get GitHub credentials from environment
       const githubToken = process.env.GITHUB_TOKEN;
-      const githubRepo = process.env.GITHUB_REPO || "tejvirmann/sikhmap";
+      const githubRepo = process.env.GITHUB_REPO || "tejvirmann/midwestmisl";
       const [owner, repo] = githubRepo.split("/");
 
       if (!githubToken) {
