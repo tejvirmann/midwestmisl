@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapView } from "@/components/Map";
 import { Search, MapPin, Building2 } from "lucide-react";
+import { UpdateMapButton } from "@/components/UpdateMapButton";
 
 interface SikhCity {
   rank: number;
@@ -35,6 +36,7 @@ export default function Map() {
     gurdwaras: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState<"cities" | "gurdwaras">("cities");
   const [selectedCity, setSelectedCity] = useState<SikhCity | null>(null);
   const [filteredCities, setFilteredCities] = useState<SikhCity[]>([]);
   const [filteredGurdwaras, setFilteredGurdwaras] = useState<Gurdwara[]>([]);
@@ -74,15 +76,42 @@ export default function Map() {
     loadData();
   }, []);
 
-  // Handle search
+  // Handle search for cities
   useEffect(() => {
-    const filtered = mapData.cities.filter(
-      (city) =>
-        city.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        city.country.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCities(filtered);
-  }, [searchTerm, mapData.cities]);
+    if (activeTab === "cities") {
+      if (!searchTerm.trim()) {
+        setFilteredCities(mapData.cities);
+      } else {
+        const filtered = mapData.cities.filter(
+          (city) =>
+            city.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            city.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (city.state && city.state.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (city.province && city.province.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+        setFilteredCities(filtered);
+      }
+    }
+  }, [searchTerm, mapData.cities, activeTab]);
+
+  // Handle search for gurdwaras
+  useEffect(() => {
+    if (activeTab === "gurdwaras") {
+      if (!searchTerm.trim()) {
+        setFilteredGurdwaras(mapData.gurdwaras);
+      } else {
+        const filtered = mapData.gurdwaras.filter(
+          (gurdwara) =>
+            gurdwara.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (gurdwara.address && gurdwara.address.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+        setFilteredGurdwaras(filtered);
+      }
+    }
+  }, [searchTerm, mapData.gurdwaras, activeTab]);
 
   // Add markers to map
   useEffect(() => {
@@ -195,12 +224,7 @@ export default function Map() {
                 Explore the largest Sikh population centers and Gurdwara locations across North America
               </p>
             </div>
-            <button
-              onClick={() => window.open("/update_gurdwara_form.html", "_blank")}
-              className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg transition-all hover:-translate-y-0.5"
-            >
-              📍 Update Map
-            </button>
+            <UpdateMapButton />
           </div>
         </div>
       </header>
@@ -213,7 +237,7 @@ export default function Map() {
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search cities..."
+                placeholder={activeTab === "cities" ? "Search cities..." : "Search gurdwaras..."}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -221,7 +245,10 @@ export default function Map() {
             </div>
 
             {/* Tabs for Cities and Gurdwaras */}
-            <Tabs defaultValue="cities" className="w-full">
+            <Tabs value={activeTab} onValueChange={(value) => {
+              setActiveTab(value as "cities" | "gurdwaras");
+              setSearchTerm(""); // Clear search when switching tabs
+            }} className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="cities">Cities</TabsTrigger>
                 <TabsTrigger value="gurdwaras">Gurdwaras</TabsTrigger>

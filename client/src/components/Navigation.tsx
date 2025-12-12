@@ -1,9 +1,12 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Home, MapPin } from "lucide-react";
+import { Home, MapPin, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
+import { Button } from "@/components/ui/button";
 
 export function Navigation() {
   const [location] = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const navItems = [
     { path: "/", label: "Home", icon: Home },
@@ -15,9 +18,11 @@ export function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-orange-500">Midwest Misl</h1>
+            <h1 className="text-2xl font-bold text-orange-500">
+              Midwest Misl
+            </h1>
           </Link>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location === item.path;
@@ -37,6 +42,21 @@ export function Navigation() {
                 </Link>
               );
             })}
+            {toggleTheme && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                className="ml-2"
+                aria-label="Toggle theme"
+              >
+                {theme === "light" ? (
+                  <Moon className="h-5 w-5" />
+                ) : (
+                  <Sun className="h-5 w-5" />
+                )}
+              </Button>
+            )}
           </div>
         </div>
       </div>
