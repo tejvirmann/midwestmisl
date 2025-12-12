@@ -56,10 +56,14 @@ git push origin main
 In Vercel dashboard → Settings → Environment Variables, add:
 
 ```
-VITE_FRONTEND_FORGE_API_KEY=AIzaSyCH4Ib-ZN2WznaWZf453IZ2BQWEEpJcePE
-GITHUB_TOKEN=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
+VITE_FRONTEND_FORGE_API_KEY=your_google_maps_api_key_here
+GITHUB_TOKEN=your_github_token_here
 GITHUB_REPO=tejvirmann/midwestmisl
 ```
+
+**⚠️ SECURITY:** Never commit actual API keys or tokens! These values should only be in:
+- `.env.local` file (gitignored - safe for local development)
+- Vercel environment variables (secure platform storage)
 
 **Important:** Add these for **Production**, **Preview**, and optionally **Development**.
 

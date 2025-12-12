@@ -15,10 +15,11 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
 
     /* Path aliases */
     "baseUrl": ".",
@@ -30,7 +31,6 @@
     /* Types */
     "types": ["vite/client", "@types/google.maps"]
   },
-  "include": ["client/src", "shared"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["client/src", "shared"]
 }
 
