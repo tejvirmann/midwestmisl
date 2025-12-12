@@ -86,21 +86,18 @@ declare global {
   }
 }
 
-const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
-const FORGE_BASE_URL =
-  import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
-  "https://forge.butterfly-effect.dev";
-const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
+const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY || import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const MAPS_URL = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
 
 function loadMapScript() {
   return new Promise((resolve, reject) => {
     if (!API_KEY) {
-      console.warn("VITE_FRONTEND_FORGE_API_KEY is not set. Map will not load.");
+      console.warn("Google Maps API key is not set. Please set VITE_FRONTEND_FORGE_API_KEY or VITE_GOOGLE_MAPS_API_KEY in your .env.local file.");
       reject(new Error("API key is missing"));
       return;
     }
     const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
+    script.src = MAPS_URL;
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => {
