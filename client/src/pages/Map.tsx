@@ -20,6 +20,7 @@ interface SikhCity {
 
 interface Gurdwara {
   name: string;
+  address?: string;
   city: string;
   state: string;
   country: string;
@@ -47,14 +48,25 @@ export default function Map() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch("/gurdwara_data.json");
-        const data = await response.json();
+        // Load existing city data
+        const cityResponse = await fetch("/gurdwara_data.json");
+        const cityData = await cityResponse.json();
+
+        // Load comprehensive geocoded Gurdwara data
+        const gurdwaraResponse = await fetch("/gurdwaras_geocoded.json");
+        const gurdwaraData = await gurdwaraResponse.json();
+
+        // Filter to only include Gurdwaras with coordinates
+        const gurdwarasWithCoords = gurdwaraData.gurdwaras.filter(
+          (g: Gurdwara) => g.latitude && g.longitude
+        );
+
         setMapData({
-          cities: data.topSikhCities,
-          gurdwaras: data.gurdwaras,
+          cities: cityData.topSikhCities,
+          gurdwaras: gurdwarasWithCoords,
         });
-        setFilteredCities(data.topSikhCities);
-        setFilteredGurdwaras(data.gurdwaras);
+        setFilteredCities(cityData.topSikhCities);
+        setFilteredGurdwaras(gurdwarasWithCoords);
       } catch (error) {
         console.error("Error loading data:", error);
       }
@@ -145,6 +157,7 @@ export default function Map() {
         content: `
           <div class="p-3 bg-background text-foreground rounded">
             <h3 class="font-bold">${gurdwara.name}</h3>
+            ${gurdwara.address ? `<p class="text-sm font-medium mt-1">📍 ${gurdwara.address}</p>` : ""}
             <p class="text-sm text-muted-foreground">${gurdwara.city}, ${gurdwara.state}</p>
             <p class="text-xs text-muted-foreground mt-2">${gurdwara.type}</p>
           </div>
@@ -173,12 +186,22 @@ export default function Map() {
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-6">
-          <h1 className="text-4xl font-bold text-orange-500 mb-2">
-            North American Sikh Concentration Map
-          </h1>
-          <p className="text-muted-foreground">
-            Explore the largest Sikh population centers and Gurdwara locations across North America
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-orange-500 mb-2">
+                North American Sikh Concentration Map
+              </h1>
+              <p className="text-muted-foreground">
+                Explore the largest Sikh population centers and Gurdwara locations across North America
+              </p>
+            </div>
+            <button
+              onClick={() => window.open("/update_gurdwara_form.html", "_blank")}
+              className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg transition-all hover:-translate-y-0.5"
+            >
+              📍 Update Map
+            </button>
+          </div>
         </div>
       </header>
 
@@ -209,11 +232,10 @@ export default function Map() {
                   {filteredCities.map((city) => (
                     <Card
                       key={`${city.city}-${city.country}`}
-                      className={`cursor-pointer transition-all ${
-                        selectedCity?.city === city.city
-                          ? "border-orange-500 bg-orange-500/10"
-                          : "hover:border-orange-500/50"
-                      }`}
+                      className={`cursor-pointer transition-all ${selectedCity?.city === city.city
+                        ? "border-orange-500 bg-orange-500/10"
+                        : "hover:border-orange-500/50"
+                        }`}
                       onClick={() => setSelectedCity(city)}
                     >
                       <CardContent className="pt-4">

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gurdwara Map - North America</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Marker Cluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .header .stats {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        .controls {
+            position: absolute;
+            top: 120px;
+            left: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 14px;
+        }
+
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .update-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 16px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .update-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+        }
+
+        .popup-content h3 {
+            margin: 0 0 10px 0;
+            color: #2d3748;
+        }
+
+        .popup-content p {
+            margin: 5px 0;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .popup-content .address {
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                top: 10px;
+                padding: 15px 20px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .controls {
+                width: calc(100% - 40px);
+                top: 90px;
+            }
+
+            .update-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 14px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🕌 Gurdwara Map - North America</h1>
+        <div class="stats" id="stats">Loading...</div>
+    </div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="search">Search Gurdwara</label>
+            <input type="text" id="search" placeholder="Search by name or city...">
+        </div>
+
+        <div class="control-group">
+            <label for="countryFilter">Filter by Country</label>
+            <select id="countryFilter">
+                <option value="all">All Countries</option>
+                <option value="USA">United States</option>
+                <option value="Canada">Canada</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="stateFilter">Filter by State/Province</label>
+            <select id="stateFilter">
+                <option value="all">All States/Provinces</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="update-btn" onclick="window.open('update_gurdwara_form.html', '_blank')">
+        📍 Update Map
+    </button>
+
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Marker Cluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+    <script>
+        // Initialize map centered on North America
+        const map = L.map('map').setView([45.0, -95.0], 4);
+
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(map);
+
+        // Create marker cluster group
+        const markers = L.markerClusterGroup({
+            chunkedLoading: true,
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false,
+            zoomToBoundsOnClick: true
+        });
+
+        let allGurdwaras = [];
+        let filteredMarkers = [];
+
+        // Custom icon for Gurdwaras
+        const gurdwaraIcon = L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">🕌</div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+
+        // Load Gurdwara data
+        fetch('gurdwaras_geocoded.json')
+            .then(response => response.json())
+            .then(data => {
+                allGurdwaras = data.gurdwaras;
+
+                // Update stats
+                const usaCount = allGurdwaras.filter(g => g.country === 'USA').length;
+                const canadaCount = allGurdwaras.filter(g => g.country === 'Canada').length;
+                document.getElementById('stats').textContent =
+                    `${allGurdwaras.length} Gurdwaras | USA: ${usaCount} | Canada: ${canadaCount}`;
+
+                // Populate state filter
+                const states = [...new Set(allGurdwaras.map(g => g.state))].sort();
+                const stateFilter = document.getElementById('stateFilter');
+                states.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    stateFilter.appendChild(option);
+                });
+
+                // Add markers
+                updateMarkers(allGurdwaras);
+            })
+            .catch(error => {
+                console.error('Error loading data:', error);
+                document.getElementById('stats').textContent = 'Error loading data';
+            });
+
+        function updateMarkers(gurdwaras) {
+            // Clear existing markers
+            markers.clearLayers();
+            filteredMarkers = [];
+
+            gurdwaras.forEach(gurdwara => {
+                if (gurdwara.latitude && gurdwara.longitude) {
+                    const marker = L.marker([gurdwara.latitude, gurdwara.longitude], {
+                        icon: gurdwaraIcon
+                    });
+
+                    const popupContent = `
+                        <div class="popup-content">
+                            <h3>${gurdwara.name}</h3>
+                            ${gurdwara.address ? `<p class="address">📍 ${gurdwara.address}</p>` : ''}
+                            <p>${gurdwara.city}, ${gurdwara.state}</p>
+                            <p>${gurdwara.country}</p>
+                            ${gurdwara.source ? `<p><small><a href="${gurdwara.source}" target="_blank">Source</a></small></p>` : ''}
+                        </div>
+                    `;
+
+                    marker.bindPopup(popupContent);
+                    marker.gurdwaraData = gurdwara;
+                    markers.addLayer(marker);
+                    filteredMarkers.push(marker);
+                }
+            });
+
+            map.addLayer(markers);
+        }
+
+        // Search functionality
+        document.getElementById('search').addEventListener('input', filterMarkers);
+        document.getElementById('countryFilter').addEventListener('change', filterMarkers);
+        document.getElementById('stateFilter').addEventListener('change', filterMarkers);
+
+        function filterMarkers() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const countryFilter = document.getElementById('countryFilter').value;
+            const stateFilter = document.getElementById('stateFilter').value;
+
+            const filtered = allGurdwaras.filter(g => {
+                const matchesSearch = !searchTerm ||
+                    g.name.toLowerCase().includes(searchTerm) ||
+                    (g.city && g.city.toLowerCase().includes(searchTerm)) ||
+                    (g.address && g.address.toLowerCase().includes(searchTerm));
+
+                const matchesCountry = countryFilter === 'all' || g.country === countryFilter;
+                const matchesState = stateFilter === 'all' || g.state === stateFilter;
+
+                return matchesSearch && matchesCountry && matchesState;
+            });
+
+            updateMarkers(filtered);
+        }
+    </script>
+</body>
+
+</html>

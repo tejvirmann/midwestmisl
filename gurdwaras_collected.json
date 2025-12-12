@@ -1,0 +1,1075 @@
+{
+    "gurdwaras": [
+        {
+            "name": "The Sikh Temple of Alabama",
+            "address": "3335 Morgan Road",
+            "city": "Bessemer",
+            "state": "AL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "magiccityreligion.org"
+        },
+        {
+            "name": "Huntsville Gurudwara",
+            "address": "7900 Bailey Cove Rd SE",
+            "city": "Huntsville",
+            "state": "AL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurudwaramap.com"
+        },
+        {
+            "name": "Sikh Sangat of Alabama",
+            "address": "904 San Ramon Avenue",
+            "city": "Huntsville",
+            "state": "AL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Guru Ram Das Ashram",
+            "address": "3312 North Woodridge Rd",
+            "city": "Birmingham",
+            "state": "AL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "The Sikh Society of Alaska",
+            "address": "11651 Hillside Drive",
+            "city": "Anchorage",
+            "state": "AK",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Guru Ram Das Ashram",
+            "address": "4501 Bayview Dr",
+            "city": "Anchorage",
+            "state": "AK",
+            "country": "USA",
+            "type": "Standard",
+            "source": "wearesikhs.org"
+        },
+        {
+            "name": "Arizona Sikh Gurdwara",
+            "address": "1129 E Sheridan St",
+            "city": "Phoenix",
+            "state": "AZ",
+            "country": "USA",
+            "type": "Standard",
+            "source": "arizonasikhgurdwara.com"
+        },
+        {
+            "name": "Siri Guru Singh Sabha of Arizona",
+            "address": "820 West Tulane Drive",
+            "city": "Tempe",
+            "state": "AZ",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Nishkam Seva Gurdwara Sahib",
+            "address": "NE corner of 51st Ave and 101 loop",
+            "city": "Glendale",
+            "state": "AZ",
+            "country": "USA",
+            "type": "Standard",
+            "source": "nishkamsevagurdwara.org"
+        },
+        {
+            "name": "Guru Nanak Dwara",
+            "address": "2302 N 9th St",
+            "city": "Phoenix",
+            "state": "AZ",
+            "country": "USA",
+            "type": "Major",
+            "source": "gurunanakdwara.com"
+        },
+        {
+            "name": "Sikh Religious Society of Phoenix",
+            "address": "8813 N 86th St",
+            "city": "Scottsdale",
+            "state": "AZ",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwaras.com"
+        },
+        {
+            "name": "Guru Nanak Sikh Temple of Northwest Arkansas",
+            "address": "1515 West Hudson Road",
+            "city": "Rogers",
+            "state": "AR",
+            "country": "USA",
+            "type": "Standard",
+            "source": "worldgurudwaras.com"
+        },
+        {
+            "name": "Sikh Religious Society of Little Rock",
+            "address": "333 Newman Dr",
+            "city": "North Little Rock",
+            "state": "AR",
+            "country": "USA",
+            "type": "Standard",
+            "source": "reddit.com"
+        },
+        {
+            "name": "Sikh Gurdwara Sahib (San Jose)",
+            "address": "2075 De La Cruz Blvd",
+            "city": "Santa Clara",
+            "state": "CA",
+            "country": "USA",
+            "type": "Major",
+            "source": "siliconvalleygurdwara.org"
+        },
+        {
+            "name": "Sikh Gurdwara Sahib Sacramento",
+            "address": "2301 Evergreen Avenue",
+            "city": "West Sacramento",
+            "state": "CA",
+            "country": "USA",
+            "type": "Major",
+            "source": "sikhtemple.org"
+        },
+        {
+            "name": "Gurdwara Sahib Stockton",
+            "address": "1930 S Sikh Temple St",
+            "city": "Stockton",
+            "state": "CA",
+            "country": "USA",
+            "type": "Major",
+            "source": "wikipedia.org"
+        },
+        {
+            "name": "Gurdwara Sahib Fremont",
+            "address": "300 Gurdwara Road",
+            "city": "Fremont",
+            "state": "CA",
+            "country": "USA",
+            "type": "Major",
+            "source": "punjabirishtey.com"
+        },
+        {
+            "name": "Santa Rosa Sikh Gurdwara",
+            "address": "792 Todd Road",
+            "city": "Santa Rosa",
+            "state": "CA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhgurdwarasr.com"
+        },
+        {
+            "name": "Valley Sikh Temple",
+            "address": "7400 Jordan Avenue",
+            "city": "Canoga Park",
+            "state": "CA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "valleysikhtemple.org"
+        },
+        {
+            "name": "Gurdwara Sahib Bradshaw",
+            "address": "7676 Bradshaw Road",
+            "city": "Sacramento",
+            "state": "CA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "indiacatalog.com"
+        },
+        {
+            "name": "Sikh Gurdwara Selma",
+            "address": "3185 Highland Ave",
+            "city": "Selma",
+            "state": "CA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Gurudwara Guru Nanak Prakash Tracy",
+            "address": "16101 West Grant Line Road",
+            "city": "Tracy",
+            "state": "CA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Colorado Singh Sabha",
+            "address": "20555 E 120th Ave",
+            "city": "Commerce City",
+            "state": "CO",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhdharmacolorado.org"
+        },
+        {
+            "name": "Denver Sikh Gurdwara",
+            "address": "7275 S. Lima Street",
+            "city": "Englewood",
+            "state": "CO",
+            "country": "USA",
+            "type": "Standard",
+            "source": "coloradosikhs.com"
+        },
+        {
+            "name": "Guru Ghar Colorado Springs",
+            "address": "4330 Iron Horse Trail",
+            "city": "Colorado Springs",
+            "state": "CO",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhdharmacolorado.org"
+        },
+        {
+            "name": "Guru Amar Das Niwas Boulder",
+            "address": "3540 Baseline Road",
+            "city": "Boulder",
+            "state": "CO",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Ram Das Ashram",
+            "address": "277 S Carter Ave",
+            "city": "Louisville",
+            "state": "CO",
+            "country": "USA",
+            "type": "Standard",
+            "source": "allaboutsikhs.com"
+        },
+        {
+            "name": "Gurdwara Guru Nanak Darbar Southington",
+            "address": "1610 West Street",
+            "city": "Southington",
+            "state": "CT",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Guru Tegh Bahadur Ji Foundation",
+            "address": "622 West Avenue",
+            "city": "Norwalk",
+            "state": "CT",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Sikh Society of Central New England",
+            "address": "39 Forest Hills Drive",
+            "city": "Farmington",
+            "state": "CT",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Gurdwara Sachkhand Darbar",
+            "address": "336 Welton St",
+            "city": "Hamden",
+            "state": "CT",
+            "country": "USA",
+            "type": "Standard",
+            "source": "wearesikhs.org"
+        },
+        {
+            "name": "Sikh Center of Delaware",
+            "address": "1107 S. Dupont Highway",
+            "city": "New Castle",
+            "state": "DE",
+            "country": "USA",
+            "type": "Standard",
+            "source": "delawareindia.com"
+        },
+        {
+            "name": "Gurdwara of Delaware",
+            "address": "Middletown",
+            "city": "Middletown",
+            "state": "DE",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwaraofdelaware.net"
+        },
+        {
+            "name": "Gurdwara Nanaksar Florida",
+            "address": "2480 N Hoagland Blvd",
+            "city": "Kissimmee",
+            "state": "FL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwarananaksarflorida.com"
+        },
+        {
+            "name": "Sikh Society Of Central Florida",
+            "address": "3233 Security Avenue",
+            "city": "Oviedo",
+            "state": "FL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Sikh Society of Florida",
+            "address": "16000 SW 60th Street",
+            "city": "Fort Lauderdale",
+            "state": "FL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Sikh Gurdwara Orlando Inc",
+            "address": "4219 S John Young Pkwy",
+            "city": "Orlando",
+            "state": "FL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhgurdwaraorlando.com"
+        },
+        {
+            "name": "Jacksonville Gurudwara / SSNEF",
+            "address": "Jacksonville",
+            "city": "Jacksonville",
+            "state": "FL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "jaxgurudwara.com"
+        },
+        {
+            "name": "Guru Singh Sabha Augusta",
+            "address": "4031 Evans to Lock Road",
+            "city": "Evans",
+            "state": "GA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "worldgurudwaras.com"
+        },
+        {
+            "name": "Gurdwara Sahib – The Sikh Study Circle, Inc.",
+            "address": "1821 S Hairston Rd",
+            "city": "Stone Mountain",
+            "state": "GA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "worldgurudwaras.com"
+        },
+        {
+            "name": "Guru Nanak Mission Society of Atlanta Inc",
+            "address": "1158 Rockbridge Road",
+            "city": "Norcross",
+            "state": "GA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "worldgurudwaras.com"
+        },
+        {
+            "name": "Sewa Gurudwara Sahib",
+            "address": "10590 Woodstock Rd",
+            "city": "Roswell",
+            "state": "GA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Guru Nanak Darbar (Augusta)",
+            "address": "2252 Nellie Drive",
+            "city": "Augusta",
+            "state": "GA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwaras.com"
+        },
+        {
+            "name": "Gurdwara of Delaware",
+            "address": "450 Boyds Corner Road",
+            "city": "Middletown",
+            "state": "DE",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwaraofdelaware.net"
+        },
+        {
+            "name": "Jacksonville Gurudwara / SSNEF",
+            "address": "6035 E Morrow St",
+            "city": "Jacksonville",
+            "state": "FL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "jaxgurudwara.com"
+        },
+        {
+            "name": "Guru Ram Das Ashram",
+            "address": "45-025 Mahalani Circle",
+            "city": "Kaneohe",
+            "state": "HI",
+            "country": "USA",
+            "type": "Standard",
+            "source": "theindianbusinessnews.com"
+        },
+        {
+            "name": "Guru Nanak Gurudwara Hawaii",
+            "address": "Honolulu",
+            "city": "Honolulu",
+            "state": "HI",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurunanakgurudwarahawaii.org"
+        },
+        {
+            "name": "Gurudwara Gurjot Parkash Sahib",
+            "address": "217 W State Rd (Route 176)",
+            "city": "Island Lake",
+            "state": "IL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Gurdwara Sahib of Chicago",
+            "address": "2341 W Devon Ave",
+            "city": "Chicago",
+            "state": "IL",
+            "country": "USA",
+            "type": "Major",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Illinois Sikh Community Center",
+            "address": "2131 Creekside Dr",
+            "city": "Wheaton",
+            "state": "IL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Oakbrook Gurudwara",
+            "address": "1500 Forest Gate Rd",
+            "city": "Oakbrook",
+            "state": "IL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Sikh Religious Society (Palatine Gurdwara)",
+            "address": "1280 Winnetka St",
+            "city": "Palatine",
+            "state": "IL",
+            "country": "USA",
+            "type": "Major",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Sikh Temple Silvis",
+            "address": "1605 14th St",
+            "city": "Silvis",
+            "state": "IL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "ustruckingdirectory.com"
+        },
+        {
+            "name": "Sikh Religious Society of Central IL",
+            "address": "2029 St Louis Bridge Rd",
+            "city": "Decatur",
+            "state": "IL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "littlesikhs.com"
+        },
+        {
+            "name": "Nanaksar Gurudwara Rockford",
+            "address": "714 3rd Ave",
+            "city": "Rockford",
+            "state": "IL",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gsonanaksar.org"
+        },
+        {
+            "name": "Guru Nanak Sikh Society",
+            "address": "1911 Hobart Rd",
+            "city": "Indianapolis",
+            "state": "IN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "ustruckingdirectory.com"
+        },
+        {
+            "name": "Gurdwara Guru Nanak Darbar",
+            "address": "12200 E 131st St",
+            "city": "Fishers",
+            "state": "IN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "ustruckingdirectory.com"
+        },
+        {
+            "name": "Gurdwara Shri Guru Hargobind Sahib Ji",
+            "address": "1050 S Graham Rd",
+            "city": "Greenwood",
+            "state": "IN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "ustruckingdirectory.com"
+        },
+        {
+            "name": "Darbar Sri Guru Granth Sahib Ji",
+            "address": "7440 S Arlington Ave",
+            "city": "Indianapolis",
+            "state": "IN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "ustruckingdirectory.com"
+        },
+        {
+            "name": "Gurudwara Sikh Center of Fort Wayne",
+            "address": "7631 IN-14",
+            "city": "Columbia City",
+            "state": "IN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "ustruckingdirectory.com"
+        },
+        {
+            "name": "Gurudwara Sahib of Evansville",
+            "address": "2816 N Cullen Ave",
+            "city": "Evansville",
+            "state": "IN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurudwarasahibofevansville.com"
+        },
+        {
+            "name": "Sikh Satsang of Indianapolis",
+            "address": "10950 Southeastern Avenue",
+            "city": "Indianapolis",
+            "state": "IN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwarasikhsatsang.org"
+        },
+        {
+            "name": "Sikh Religious Society of Indiana",
+            "address": "10005 Colorado Street",
+            "city": "Crown Point",
+            "state": "IN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Sikh Temple of Iowa",
+            "address": "1115 Walnut Street",
+            "city": "West Des Moines",
+            "state": "IA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwaar.com"
+        },
+        {
+            "name": "Iowa Sikh Worship Center Gurdwara",
+            "address": "4820 NW 59th Ave",
+            "city": "Johnston",
+            "state": "IA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwaar.com"
+        },
+        {
+            "name": "Midwest Sikh Gurudwara",
+            "address": "10050 Marion St",
+            "city": "Lenexa",
+            "state": "KS",
+            "country": "USA",
+            "type": "Standard",
+            "source": "kcmsa.org"
+        },
+        {
+            "name": "Gurdwara Nanak Darbar Sahib",
+            "address": "126 S. Cherry Street",
+            "city": "Olathe",
+            "state": "KS",
+            "country": "USA",
+            "type": "Standard",
+            "source": "kcsikh.org"
+        },
+        {
+            "name": "Sikh Society of Kentucky Gurdwara Sahib",
+            "address": "198 Thompson Ave",
+            "city": "Louisville",
+            "state": "KY",
+            "country": "USA",
+            "type": "Standard",
+            "source": "americanturban.com"
+        },
+        {
+            "name": "Lexington Gurudwara",
+            "address": "Swigert Avenue",
+            "city": "Lexington",
+            "state": "KY",
+            "country": "USA",
+            "type": "Standard",
+            "source": "kentucky.com"
+        },
+        {
+            "name": "The Sikh Society of South Inc.",
+            "address": "7225 Benson Court",
+            "city": "New Orleans",
+            "state": "LA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Gurdwara Sikh Sangat Boston",
+            "address": "10 Thorndike Street",
+            "city": "Everett",
+            "state": "MA",
+            "country": "USA",
+            "type": "Major",
+            "source": "bostonsikhsangat.com"
+        },
+        {
+            "name": "Gurudwara Guru Nanak Darbar",
+            "address": "226 Mystic Avenue",
+            "city": "Medford",
+            "state": "MA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurunanakdarbar.net"
+        },
+        {
+            "name": "New England Sikh Study Circle",
+            "address": "168 Flanders Road",
+            "city": "Westborough",
+            "state": "MA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "nessc.org"
+        },
+        {
+            "name": "Guru Ram Das Ashram",
+            "address": "368 Village Street",
+            "city": "Millis",
+            "state": "MA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "millisashram.org"
+        },
+        {
+            "name": "Baltimore Sikh Society Dundalk",
+            "address": "1731 Rita Rd",
+            "city": "Dundalk",
+            "state": "MD",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "Guru Gobind Singh Foundation",
+            "address": "13810 Travilah Road",
+            "city": "Rockville",
+            "state": "MD",
+            "country": "USA",
+            "type": "Standard",
+            "source": "ggsfusa.org"
+        },
+        {
+            "name": "Gurdwara Guru Gyan Sagar",
+            "address": "3911 Dustin Rd",
+            "city": "Burtonsville",
+            "state": "MD",
+            "country": "USA",
+            "type": "Standard",
+            "source": "wearesikhs.org"
+        },
+        {
+            "name": "Sikh Association of Baltimore",
+            "address": "3423 Chapman Road",
+            "city": "Randallstown",
+            "state": "MD",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhiwiki.org"
+        },
+        {
+            "name": "The Washington Sikh Center",
+            "address": "7500 Warfield Road",
+            "city": "Gaithersburg",
+            "state": "MD",
+            "country": "USA",
+            "type": "Standard",
+            "source": "washingtonsikhcenter.org"
+        },
+        {
+            "name": "Sikh Society of Michigan",
+            "address": "33340 Dequindre",
+            "city": "Sterling Heights",
+            "state": "MI",
+            "country": "USA",
+            "type": "Major",
+            "source": "gurdwaar.com"
+        },
+        {
+            "name": "Mata Tripta Gurudwara",
+            "address": "40600 Schoolcraft Rd",
+            "city": "Plymouth",
+            "state": "MI",
+            "country": "USA",
+            "type": "Standard",
+            "source": "migurudwara.org"
+        },
+        {
+            "name": "Sikh Gurdwara Rochester Hills",
+            "address": "271 W. Auburn Road",
+            "city": "Rochester Hills",
+            "state": "MI",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhgurdwara.com"
+        },
+        {
+            "name": "Gurudwara Gobind Marg",
+            "address": "48055 Michigan Avenue",
+            "city": "Canton",
+            "state": "MI",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gobindmarg.com"
+        },
+        {
+            "name": "Singh Sabha Of Michigan",
+            "address": "3310 Canton Center Rd",
+            "city": "Canton",
+            "state": "MI",
+            "country": "USA",
+            "type": "Standard",
+            "source": "singhsabhaofmi.org"
+        },
+        {
+            "name": "Sikh Society of Minnesota",
+            "address": "Bloomington",
+            "city": "Bloomington",
+            "state": "MN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "mnsikhs.com"
+        },
+        {
+            "name": "The Sikh Society of Mississippi",
+            "address": "4324 Welota Drive",
+            "city": "Jackson",
+            "state": "MS",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Guru Tegh Bahadur Sikh Temple Inc.",
+            "address": "1087 I-20 Frontage Road",
+            "city": "Jackson",
+            "state": "MS",
+            "country": "USA",
+            "type": "Standard",
+            "source": "msgurdwara.com"
+        },
+        {
+            "name": "Sikh Study Circle of St. Louis",
+            "address": "116 Willis Road",
+            "city": "St. Peters",
+            "state": "MO",
+            "country": "USA",
+            "type": "Standard",
+            "source": "stlouisgurudwara.org"
+        },
+        {
+            "name": "Guru Ram Das Ashram",
+            "address": "421 East Story Street",
+            "city": "Bozeman",
+            "state": "MT",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Gurdwara Gur Nanak Prakash Las Vegas",
+            "address": "7640 Haven St",
+            "city": "Las Vegas",
+            "state": "NV",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwaragurnanakparkashlv.org"
+        },
+        {
+            "name": "Gurudwara Dashmesh Darbar",
+            "address": "790 East 2nd Street",
+            "city": "Reno",
+            "state": "NV",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurudwaraddr.com"
+        },
+        {
+            "name": "Nanak Naam Jahaj Gurudwara",
+            "address": "1080 West Side Ave",
+            "city": "Jersey City",
+            "state": "NJ",
+            "country": "USA",
+            "type": "Major",
+            "source": "nnjgurudwara.org"
+        },
+        {
+            "name": "Garden State Sikh Association",
+            "address": "977 Washington Valley Rd",
+            "city": "Basking Ridge",
+            "state": "NJ",
+            "country": "USA",
+            "type": "Standard",
+            "source": "wearesikhs.org"
+        },
+        {
+            "name": "Albuquerque Sikh Gurudwara",
+            "address": "1905 Alvarado NE",
+            "city": "Albuquerque",
+            "state": "NM",
+            "country": "USA",
+            "type": "Standard",
+            "source": "wearesikhs.org"
+        },
+        {
+            "name": "Sikh Cultural Society",
+            "address": "95-30 118th St",
+            "city": "Richmond Hill",
+            "state": "NY",
+            "country": "USA",
+            "type": "Major",
+            "source": "nyindia.us"
+        },
+        {
+            "name": "Guru Gobind Singh Sikh Center",
+            "address": "1065 Old Country Rd",
+            "city": "Plainview",
+            "state": "NY",
+            "country": "USA",
+            "type": "Major",
+            "source": "worldgurudwaras.com"
+        },
+        {
+            "name": "Manhattan Sikh Center",
+            "address": "216 East 53rd Street",
+            "city": "New York",
+            "state": "NY",
+            "country": "USA",
+            "type": "Standard",
+            "source": "manhattansikhcenter.org"
+        },
+        {
+            "name": "Gurdwara Khalsa Darbar",
+            "address": "401 E Arrowood Rd",
+            "city": "Charlotte",
+            "state": "NC",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwarakhalsadarbar.org"
+        },
+        {
+            "name": "Guru Gobind Singh Sikh Gurudwara",
+            "address": "38 Tarbell Avenue",
+            "city": "Bedford",
+            "state": "OH",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhwomen.com"
+        },
+        {
+            "name": "Gurudwara Sahib Columbus",
+            "address": "3581 Snouffer Road",
+            "city": "Columbus",
+            "state": "OH",
+            "country": "USA",
+            "type": "Standard",
+            "source": "ohioptech.com"
+        },
+        {
+            "name": "Sikh Gurdwara of Oklahoma",
+            "address": "4525 NW 16th St",
+            "city": "Oklahoma City",
+            "state": "OK",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Sikh Center of Oregon",
+            "address": "22801 SW Scholls Ferry Rd",
+            "city": "Hillsboro",
+            "state": "OR",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhcenteroforegon.com"
+        },
+        {
+            "name": "Sikh Gurdwara of Philadelphia",
+            "address": "6708-10 Garden Court",
+            "city": "Upper Darby",
+            "state": "PA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "dukinsider.com"
+        },
+        {
+            "name": "Pittsburgh Sikh Gurdwara",
+            "address": "4403 Campbells Run Road",
+            "city": "Pittsburgh",
+            "state": "PA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwaar.com"
+        },
+        {
+            "name": "Sikh Religious Society of South Carolina",
+            "address": "Chapin",
+            "city": "Chapin",
+            "state": "SC",
+            "country": "USA",
+            "type": "Standard",
+            "source": "wikipedia.org"
+        },
+        {
+            "name": "Nashville Gurdwara",
+            "address": "7673 Sawyer Brown Road",
+            "city": "Nashville",
+            "state": "TN",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurdwara.us"
+        },
+        {
+            "name": "Gurdwara Sikh Sangat Euless",
+            "address": "200 East Euless Blvd",
+            "city": "Euless",
+            "state": "TX",
+            "country": "USA",
+            "type": "Major",
+            "source": "sikhsangateuless.com"
+        },
+        {
+            "name": "Gurdwara Akaljot Garland",
+            "address": "Garland",
+            "city": "Garland",
+            "state": "TX",
+            "country": "USA",
+            "type": "Major",
+            "source": "gurdwaraakaljot.org"
+        },
+        {
+            "name": "Austin Gurdwara Sahib",
+            "address": "5104 Avispa Way",
+            "city": "Austin",
+            "state": "TX",
+            "country": "USA",
+            "type": "Standard",
+            "source": "austingurdwarasahib.com"
+        },
+        {
+            "name": "Sikh Temple of Utah",
+            "address": "Taylorsville",
+            "city": "Taylorsville",
+            "state": "UT",
+            "country": "USA",
+            "type": "Standard",
+            "source": "sikhtempleofutah.org"
+        },
+        {
+            "name": "VT Sikh Gurdwara",
+            "address": "Colchester",
+            "city": "Colchester",
+            "state": "VT",
+            "country": "USA",
+            "type": "Standard",
+            "source": "untappd.com"
+        },
+        {
+            "name": "Singh Sabha Gurdwara",
+            "address": "12001 Braddock Road",
+            "city": "Fairfax",
+            "state": "VA",
+            "country": "USA",
+            "type": "Major",
+            "source": "ssgva.org"
+        },
+        {
+            "name": "Richmond Sikh Gurdwara",
+            "address": "Richmond",
+            "city": "Richmond",
+            "state": "VA",
+            "country": "USA",
+            "type": "Standard",
+            "source": "richmondsikhgurdwara.org"
+        },
+        {
+            "name": "Gurudwara Singh Sabha of Washington",
+            "address": "5200 Talbot Rd S",
+            "city": "Renton",
+            "state": "WA",
+            "country": "USA",
+            "type": "Major",
+            "source": "gsswa.org"
+        },
+        {
+            "name": "Sikh Temple of Wisconsin",
+            "address": "7512 S Howell Ave",
+            "city": "Oak Creek",
+            "state": "WI",
+            "country": "USA",
+            "type": "Major",
+            "source": "sikhtempleofwisconsin.com"
+        },
+        {
+            "name": "Gurudwara Sahib Madison",
+            "address": "6970 Century Ave",
+            "city": "Middleton",
+            "state": "WI",
+            "country": "USA",
+            "type": "Standard",
+            "source": "madisonwigurudwara.com"
+        },
+        {
+            "name": "Sikh Religious Society of Wisconsin",
+            "address": "3675 N Calhoun Road",
+            "city": "Brookfield",
+            "state": "WI",
+            "country": "USA",
+            "type": "Standard",
+            "source": "gurduara-brookfield.org"
+        },
+        {
+            "name": "Sikh Temple of Fox Valley",
+            "address": "1304 Midway Road",
+            "city": "Menasha",
+            "state": "WI",
+            "country": "USA",
+            "type": "Standard",
+            "source": "mapcarta.com"
+        },
+        {
+            "name": "Akal Travel Center Gurdwara",
+            "address": "168 Hunt Rd",
+            "city": "Laramie",
+            "state": "WY",
+            "country": "USA",
+            "type": "Standard",
+            "source": "wyomingpublicmedia.org"
+        }
+    ]
+}
