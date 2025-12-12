@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapView } from "@/components/Map";
 import { Search, MapPin, Building2 } from "lucide-react";
+import { UpdateMapButton } from "@/components/UpdateMapButton";
 
 interface SikhCity {
   rank: number;
@@ -20,6 +21,7 @@ interface SikhCity {
 
 interface Gurdwara {
   name: string;
+  address?: string;
   city: string;
   state: string;
   country: string;
@@ -34,6 +36,7 @@ export default function Map() {
     gurdwaras: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState<"cities" | "gurdwaras">("cities");
   const [selectedCity, setSelectedCity] = useState<SikhCity | null>(null);
   const [filteredCities, setFilteredCities] = useState<SikhCity[]>([]);
   const [filteredGurdwaras, setFilteredGurdwaras] = useState<Gurdwara[]>([]);
@@ -47,14 +50,25 @@ export default function Map() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch("/gurdwara_data.json");
-        const data = await response.json();
+        // Load existing city data
+        const cityResponse = await fetch("/gurdwara_data.json");
+        const cityData = await cityResponse.json();
+
+        // Load comprehensive geocoded Gurdwara data
+        const gurdwaraResponse = await fetch("/gurdwaras_geocoded.json");
+        const gurdwaraData = await gurdwaraResponse.json();
+
+        // Filter to only include Gurdwaras with coordinates
+        const gurdwarasWithCoords = gurdwaraData.gurdwaras.filter(
+          (g: Gurdwara) => g.latitude && g.longitude
+        );
+
         setMapData({
-          cities: data.topSikhCities,
-          gurdwaras: data.gurdwaras,
+          cities: cityData.topSikhCities,
+          gurdwaras: gurdwarasWithCoords,
         });
-        setFilteredCities(data.topSikhCities);
-        setFilteredGurdwaras(data.gurdwaras);
+        setFilteredCities(cityData.topSikhCities);
+        setFilteredGurdwaras(gurdwarasWithCoords);
       } catch (error) {
         console.error("Error loading data:", error);
       }
@@ -62,15 +76,42 @@ export default function Map() {
     loadData();
   }, []);
 
-  // Handle search
+  // Handle search for cities
   useEffect(() => {
-    const filtered = mapData.cities.filter(
-      (city) =>
-        city.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        city.country.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCities(filtered);
-  }, [searchTerm, mapData.cities]);
+    if (activeTab === "cities") {
+      if (!searchTerm.trim()) {
+        setFilteredCities(mapData.cities);
+      } else {
+        const filtered = mapData.cities.filter(
+          (city) =>
+            city.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            city.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (city.state && city.state.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (city.province && city.province.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+        setFilteredCities(filtered);
+      }
+    }
+  }, [searchTerm, mapData.cities, activeTab]);
+
+  // Handle search for gurdwaras
+  useEffect(() => {
+    if (activeTab === "gurdwaras") {
+      if (!searchTerm.trim()) {
+        setFilteredGurdwaras(mapData.gurdwaras);
+      } else {
+        const filtered = mapData.gurdwaras.filter(
+          (gurdwara) =>
+            gurdwara.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (gurdwara.address && gurdwara.address.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+        setFilteredGurdwaras(filtered);
+      }
+    }
+  }, [searchTerm, mapData.gurdwaras, activeTab]);
 
   // Add markers to map
   useEffect(() => {
@@ -145,6 +186,7 @@ export default function Map() {
         content: `
           <div class="p-3 bg-background text-foreground rounded">
             <h3 class="font-bold">${gurdwara.name}</h3>
+            ${gurdwara.address ? `<p class="text-sm font-medium mt-1">📍 ${gurdwara.address}</p>` : ""}
             <p class="text-sm text-muted-foreground">${gurdwara.city}, ${gurdwara.state}</p>
             <p class="text-xs text-muted-foreground mt-2">${gurdwara.type}</p>
           </div>
@@ -173,12 +215,17 @@ export default function Map() {
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-6">
-          <h1 className="text-4xl font-bold text-orange-500 mb-2">
-            North American Sikh Concentration Map
-          </h1>
-          <p className="text-muted-foreground">
-            Explore the largest Sikh population centers and Gurdwara locations across North America
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-orange-500 mb-2">
+                North American Sikh Concentration Map
+              </h1>
+              <p className="text-muted-foreground">
+                Explore the largest Sikh population centers and Gurdwara locations across North America
+              </p>
+            </div>
+            <UpdateMapButton />
+          </div>
         </div>
       </header>
 
@@ -190,7 +237,7 @@ export default function Map() {
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search cities..."
+                placeholder={activeTab === "cities" ? "Search cities..." : "Search gurdwaras..."}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -198,7 +245,10 @@ export default function Map() {
             </div>
 
             {/* Tabs for Cities and Gurdwaras */}
-            <Tabs defaultValue="cities" className="w-full">
+            <Tabs value={activeTab} onValueChange={(value) => {
+              setActiveTab(value as "cities" | "gurdwaras");
+              setSearchTerm(""); // Clear search when switching tabs
+            }} className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="cities">Cities</TabsTrigger>
                 <TabsTrigger value="gurdwaras">Gurdwaras</TabsTrigger>
@@ -209,11 +259,10 @@ export default function Map() {
                   {filteredCities.map((city) => (
                     <Card
                       key={`${city.city}-${city.country}`}
-                      className={`cursor-pointer transition-all ${
-                        selectedCity?.city === city.city
-                          ? "border-orange-500 bg-orange-500/10"
-                          : "hover:border-orange-500/50"
-                      }`}
+                      className={`cursor-pointer transition-all ${selectedCity?.city === city.city
+                        ? "border-orange-500 bg-orange-500/10"
+                        : "hover:border-orange-500/50"
+                        }`}
                       onClick={() => setSelectedCity(city)}
                     >
                       <CardContent className="pt-4">
