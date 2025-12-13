@@ -71,3 +71,4 @@ grep -r "AIzaSy\|ghp_\|gho_\|ghu_" --exclude-dir=node_modules --exclude="*.md" .
 
 If you find any actual secrets, remove them and use placeholders!
 
+
