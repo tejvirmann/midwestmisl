@@ -3,6 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { MapView } from "@/components/Map";
 import { Search, MapPin, Building2 } from "lucide-react";
 import { UpdateMapButton } from "@/components/UpdateMapButton";
@@ -30,21 +33,45 @@ interface Gurdwara {
   type: string;
 }
 
+interface GoogleMapsGurdwara {
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  place_url: string;
+  formatted_address: string;
+}
+
 export default function Map() {
   const [mapData, setMapData] = useState<{ cities: SikhCity[]; gurdwaras: Gurdwara[] }>({
     cities: [],
     gurdwaras: [],
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState<"cities" | "gurdwaras">("cities");
+  const [activeTab, setActiveTab] = useState<"cities" | "gurdwaras" | "googlemaps">("cities");
   const [selectedCity, setSelectedCity] = useState<SikhCity | null>(null);
   const [filteredCities, setFilteredCities] = useState<SikhCity[]>([]);
   const [filteredGurdwaras, setFilteredGurdwaras] = useState<Gurdwara[]>([]);
+  const [googleMapsGurdwaras, setGoogleMapsGurdwaras] = useState<GoogleMapsGurdwara[]>([]);
+  const [filteredGoogleMapsGurdwaras, setFilteredGoogleMapsGurdwaras] = useState<GoogleMapsGurdwara[]>([]);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [markers, setMarkers] = useState<{
     cityMarkers: google.maps.Marker[];
     gurdwaraMarkers: google.maps.Marker[];
-  }>({ cityMarkers: [], gurdwaraMarkers: [] });
+    googleMapsMarkers: google.maps.Marker[];
+  }>({ cityMarkers: [], gurdwaraMarkers: [], googleMapsMarkers: [] });
+  const [selectedLayers, setSelectedLayers] = useState<{
+    cities: boolean;
+    researchGurdwaras: boolean;
+    googleMapsGurdwaras: boolean;
+  }>({
+    cities: true,
+    researchGurdwaras: false,
+    googleMapsGurdwaras: true,
+  });
 
   // Load data
   useEffect(() => {
@@ -63,12 +90,26 @@ export default function Map() {
           (g: Gurdwara) => g.latitude && g.longitude
         );
 
+        // Load Google Maps Gurdwaras
+        let googleMapsList: GoogleMapsGurdwara[] = [];
+        try {
+          const googleMapsResponse = await fetch("/data/google_maps_gurdwaras.json");
+          if (googleMapsResponse.ok) {
+            const googleMapsData = await googleMapsResponse.json();
+            googleMapsList = googleMapsData.gurdwaras || [];
+          }
+        } catch (error) {
+          console.warn("Could not load Google Maps Gurdwaras data:", error);
+        }
+
         setMapData({
           cities: cityData.topSikhCities,
           gurdwaras: gurdwarasWithCoords,
         });
         setFilteredCities(cityData.topSikhCities);
         setFilteredGurdwaras(gurdwarasWithCoords);
+        setGoogleMapsGurdwaras(googleMapsList);
+        setFilteredGoogleMapsGurdwaras(googleMapsList);
       } catch (error) {
         console.error("Error loading data:", error);
       }
@@ -113,6 +154,25 @@ export default function Map() {
     }
   }, [searchTerm, mapData.gurdwaras, activeTab]);
 
+  // Handle search for Google Maps gurdwaras
+  useEffect(() => {
+    if (activeTab === "googlemaps") {
+      if (!searchTerm.trim()) {
+        setFilteredGoogleMapsGurdwaras(googleMapsGurdwaras);
+      } else {
+        const filtered = googleMapsGurdwaras.filter(
+          (gurdwara) =>
+            gurdwara.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            gurdwara.address.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredGoogleMapsGurdwaras(filtered);
+      }
+    }
+  }, [searchTerm, googleMapsGurdwaras, activeTab]);
+
   // Add markers to map
   useEffect(() => {
     if (!mapInstance) return;
@@ -120,12 +180,20 @@ export default function Map() {
     // Clear existing markers
     markers.cityMarkers.forEach((marker) => marker.setMap(null));
     markers.gurdwaraMarkers.forEach((marker) => marker.setMap(null));
+    markers.googleMapsMarkers.forEach((marker) => marker.setMap(null));
 
     const newCityMarkers: google.maps.Marker[] = [];
     const newGurdwaraMarkers: google.maps.Marker[] = [];
+    const newGoogleMapsMarkers: google.maps.Marker[] = [];
+
+    // Determine what to show based on selected layers
+    const showCities = selectedLayers.cities;
+    const showGurdwaras = selectedLayers.researchGurdwaras;
+    const showGoogleMaps = selectedLayers.googleMapsGurdwaras;
 
     // Add city markers
-    filteredCities.forEach((city) => {
+    if (showCities) {
+      filteredCities.forEach((city) => {
       const marker = new google.maps.Marker({
         position: { lat: city.latitude, lng: city.longitude },
         map: mapInstance,
@@ -164,11 +232,13 @@ export default function Map() {
 
       marker.set("infoWindow", infoWindow);
       newCityMarkers.push(marker);
-    });
+      });
+    }
 
     // Add gurdwara markers
-    filteredGurdwaras.forEach((gurdwara) => {
-      const marker = new google.maps.Marker({
+    if (showGurdwaras) {
+      filteredGurdwaras.forEach((gurdwara) => {
+        const marker = new google.maps.Marker({
         position: { lat: gurdwara.latitude, lng: gurdwara.longitude },
         map: mapInstance,
         title: gurdwara.name,
@@ -205,57 +275,159 @@ export default function Map() {
 
       marker.set("infoWindow", infoWindow);
       newGurdwaraMarkers.push(marker);
-    });
+      });
+    }
 
-    setMarkers({ cityMarkers: newCityMarkers, gurdwaraMarkers: newGurdwaraMarkers });
-  }, [mapInstance, filteredCities, filteredGurdwaras]);
+    // Add Google Maps gurdwara markers (green)
+    if (showGoogleMaps) {
+      filteredGoogleMapsGurdwaras.forEach((gurdwara) => {
+        const marker = new google.maps.Marker({
+          position: { lat: gurdwara.latitude, lng: gurdwara.longitude },
+          map: mapInstance,
+          title: gurdwara.name,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 6,
+            fillColor: "#22c55e", // Green color
+            fillOpacity: 0.8,
+            strokeColor: "#FFFFFF",
+            strokeWeight: 1.5,
+          },
+        });
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+            <div class="p-3 bg-background text-foreground rounded max-w-sm">
+              <h3 class="font-bold text-lg mb-2">${gurdwara.name}</h3>
+              ${gurdwara.address ? `<p class="text-sm font-medium mt-1 mb-2">📍 ${gurdwara.address}</p>` : ""}
+              <p class="text-sm text-muted-foreground mb-3">${gurdwara.city}, ${gurdwara.state}, ${gurdwara.country}</p>
+              ${gurdwara.place_url ? `
+                <a href="${gurdwara.place_url}" target="_blank" rel="noopener noreferrer" 
+                   class="inline-block mt-2 px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-sm rounded-md transition-colors">
+                  View on Google Maps →
+                </a>
+              ` : ""}
+            </div>
+          `,
+        });
+
+        marker.addListener("click", () => {
+          // Close all other info windows
+          newGoogleMapsMarkers.forEach((m) => {
+            const iw = m.get("infoWindow");
+            if (iw) iw.close();
+          });
+          infoWindow.open(mapInstance, marker);
+          marker.set("infoWindow", infoWindow);
+        });
+
+        marker.set("infoWindow", infoWindow);
+        newGoogleMapsMarkers.push(marker);
+      });
+    }
+
+    setMarkers({ 
+      cityMarkers: newCityMarkers, 
+      gurdwaraMarkers: newGurdwaraMarkers,
+      googleMapsMarkers: newGoogleMapsMarkers,
+    });
+  }, [mapInstance, filteredCities, filteredGurdwaras, filteredGoogleMapsGurdwaras, selectedLayers]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
       <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-orange-500 mb-2">
+        <div className="container mx-auto px-4 py-4 sm:py-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-500 mb-1 sm:mb-2">
                 North American Sikh Concentration Map
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Explore the largest Sikh population centers and Gurdwara locations across North America
               </p>
             </div>
-            <UpdateMapButton />
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 bg-card border border-border rounded-lg px-3 sm:px-4 py-2">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="layer-cities"
+                    checked={selectedLayers.cities}
+                    onCheckedChange={(checked) =>
+                      setSelectedLayers((prev) => ({ ...prev, cities: checked === true }))
+                    }
+                  />
+                  <Label htmlFor="layer-cities" className="text-xs sm:text-sm font-medium cursor-pointer whitespace-nowrap">
+                    Cities
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="layer-research"
+                    checked={selectedLayers.researchGurdwaras}
+                    onCheckedChange={(checked) =>
+                      setSelectedLayers((prev) => ({ ...prev, researchGurdwaras: checked === true }))
+                    }
+                  />
+                  <Label htmlFor="layer-research" className="text-xs sm:text-sm font-medium cursor-pointer whitespace-nowrap">
+                    Research
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="layer-googlemaps"
+                    checked={selectedLayers.googleMapsGurdwaras}
+                    onCheckedChange={(checked) =>
+                      setSelectedLayers((prev) => ({ ...prev, googleMapsGurdwaras: checked === true }))
+                    }
+                  />
+                  <Label htmlFor="layer-googlemaps" className="text-xs sm:text-sm font-medium cursor-pointer whitespace-nowrap">
+                    Google Maps
+                  </Label>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <UpdateMapButton />
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="lg:col-span-1 space-y-3 sm:space-y-4 order-2 lg:order-1">
             {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={activeTab === "cities" ? "Search cities..." : "Search gurdwaras..."}
+                placeholder={
+                  activeTab === "cities" 
+                    ? "Search cities..." 
+                    : activeTab === "gurdwaras"
+                    ? "Search gurdwaras..."
+                    : "Search Google Maps gurdwaras..."
+                }
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
 
-            {/* Tabs for Cities and Gurdwaras */}
+            {/* Tabs for Cities, Gurdwaras, and Google Maps */}
             <Tabs value={activeTab} onValueChange={(value) => {
-              setActiveTab(value as "cities" | "gurdwaras");
+              setActiveTab(value as "cities" | "gurdwaras" | "googlemaps");
               setSearchTerm(""); // Clear search when switching tabs
             }} className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="cities">Cities</TabsTrigger>
-                <TabsTrigger value="gurdwaras">Gurdwaras</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 h-auto">
+                <TabsTrigger value="cities" className="text-xs sm:text-sm py-2 px-2 sm:px-4">Cities</TabsTrigger>
+                <TabsTrigger value="gurdwaras" className="text-xs sm:text-sm py-2 px-2 sm:px-4">Gurdwaras</TabsTrigger>
+                <TabsTrigger value="googlemaps" className="text-xs sm:text-sm py-2 px-2 sm:px-4">Google Maps</TabsTrigger>
               </TabsList>
 
               <TabsContent value="cities" className="space-y-2 mt-4">
-                <div className="max-h-96 overflow-y-auto space-y-2">
+                <div className="max-h-[300px] sm:max-h-96 overflow-y-auto space-y-2">
                   {filteredCities.map((city) => (
                     <Card
                       key={`${city.city}-${city.country}`}
@@ -288,7 +460,7 @@ export default function Map() {
               </TabsContent>
 
               <TabsContent value="gurdwaras" className="space-y-2 mt-4">
-                <div className="max-h-96 overflow-y-auto space-y-2">
+                <div className="max-h-[300px] sm:max-h-96 overflow-y-auto space-y-2">
                   {filteredGurdwaras.map((gurdwara, idx) => (
                     <Card key={idx} className="hover:border-indigo-500/50 transition-all">
                       <CardContent className="pt-4">
@@ -311,23 +483,72 @@ export default function Map() {
                   ))}
                 </div>
               </TabsContent>
+
+              <TabsContent value="googlemaps" className="space-y-2 mt-4">
+                <div className="max-h-[300px] sm:max-h-96 overflow-y-auto space-y-2">
+                  {filteredGoogleMapsGurdwaras.map((gurdwara, idx) => (
+                    <Card 
+                      key={idx} 
+                      className="hover:border-green-500/50 transition-all cursor-pointer"
+                      onClick={() => {
+                        if (mapInstance) {
+                          mapInstance.setCenter({ lat: gurdwara.latitude, lng: gurdwara.longitude });
+                          mapInstance.setZoom(15);
+                        }
+                      }}
+                    >
+                      <CardContent className="pt-4">
+                        <div className="flex items-start gap-2">
+                          <div className="w-3 h-3 rounded-full bg-green-500 mt-1 shrink-0"></div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-sm line-clamp-2">
+                              {gurdwara.name}
+                            </h3>
+                            <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                              {gurdwara.address}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {gurdwara.city}, {gurdwara.state}
+                            </p>
+                            {gurdwara.place_url && (
+                              <a
+                                href={gurdwara.place_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-green-600 hover:text-green-700 mt-2 inline-block"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                View on Google Maps →
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
             </Tabs>
 
             {/* Legend */}
             <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm">Legend</CardTitle>
+              <CardHeader className="pb-2 sm:pb-3">
+                <CardTitle className="text-xs sm:text-sm">Legend</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-orange-500 border-2 border-white"></div>
-                  <span>Sikh Population Centers</span>
+              <CardContent className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-orange-500 border-2 border-white shrink-0"></div>
+                  <span className="text-xs sm:text-sm">Sikh Population Centers</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-indigo-500 border-2 border-white"></div>
-                  <span>Gurdwara Locations</span>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-indigo-500 border-2 border-white shrink-0"></div>
+                  <span className="text-xs sm:text-sm">Gurdwara Locations</span>
                 </div>
-                <p className="text-xs text-muted-foreground pt-2">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-green-500 border-2 border-white shrink-0"></div>
+                  <span className="text-xs sm:text-sm">Google Maps Gurdwaras</span>
+                </div>
+                <p className="text-xs text-muted-foreground pt-1 sm:pt-2">
                   Circle size indicates population concentration percentage
                 </p>
               </CardContent>
@@ -335,9 +556,10 @@ export default function Map() {
           </div>
 
           {/* Map */}
-          <div className="lg:col-span-3">
-            <Card className="h-[600px] lg:h-[800px] overflow-hidden">
+          <div className="lg:col-span-3 order-1 lg:order-2">
+            <Card className="h-[400px] sm:h-[500px] md:h-[600px] lg:h-[800px] overflow-hidden">
               <MapView
+                className="w-full h-full"
                 onMapReady={(map: google.maps.Map) => {
                   setMapInstance(map);
                   // Center map on North America
