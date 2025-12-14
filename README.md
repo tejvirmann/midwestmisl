@@ -122,3 +122,4 @@ Users can contribute by submitting updates through the "Update Map" button. Subm
 
 Built with ❤️ for the Sikh community
 
+
