@@ -24,6 +24,7 @@ The Gurdwara data in this project was collected using the following process:
 
 2. **Download via Google Takeout**
    - Visit [Google Takeout](https://takeout.google.com/?pli=1)
+   - In the Takeout list, click the **Saved** button
    - Select "My Maps" or "Saved Places" from your Google account
    - Download the data in your preferred format (JSON, KML, etc.)
 

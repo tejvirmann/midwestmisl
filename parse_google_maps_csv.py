@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Parse google-maps-gurdwaras.csv and convert to JSON format
+Parse Google Maps CSV exports and convert to JSON format.
+Supports all_gurdwaras.csv or google-maps-gurdwaras.csv.
 """
 import csv
 import json
@@ -66,7 +67,9 @@ def parse_csv_to_json(csv_file, output_dir="client/public/data"):
             # Build address components from geocoded data
             city = row.get('city', '').strip()
             state = row.get('state', '').strip() or row.get('state_code', '').strip()
+            state_code = row.get('state_code', '').strip()
             country = row.get('country', '').strip()
+            country_code = row.get('country_code', '').strip()
             
             gurdwara = {
                 "name": name,
@@ -74,6 +77,8 @@ def parse_csv_to_json(csv_file, output_dir="client/public/data"):
                 "city": city,
                 "state": state,
                 "country": country,
+                "state_code": state_code,
+                "country_code": country_code,
                 "latitude": lat,
                 "longitude": lon,
                 "place_url": place_url,
@@ -93,9 +98,10 @@ def parse_csv_to_json(csv_file, output_dir="client/public/data"):
     return output_file
 
 if __name__ == "__main__":
-    csv_file = "google-maps-gurdwaras.csv"
-    if os.path.exists(csv_file):
+    preferred_files = ["all_gurdwaras_2.csv", "all_gurdwaras.csv", "google-maps-gurdwaras.csv"]
+    csv_file = next((f for f in preferred_files if os.path.exists(f)), None)
+    if csv_file:
         parse_csv_to_json(csv_file)
     else:
-        print(f"❌ Error: {csv_file} not found")
+        print(f"❌ Error: none of {preferred_files} found")
 
