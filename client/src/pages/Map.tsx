@@ -10,15 +10,12 @@ import { Search, MapPin } from "lucide-react";
 import { UpdateMapButton } from "@/components/UpdateMapButton";
 
 interface SikhCity {
-  rank: number;
   city: string;
-  country: string;
-  province?: string;
   state?: string;
-  population_percentage: number;
-  notes: string;
+  country: string;
   latitude: number;
   longitude: number;
+  gurdwara_count: number;
 }
 
 interface GoogleMapsGurdwara {
@@ -35,7 +32,25 @@ interface GoogleMapsGurdwara {
   formatted_address: string;
 }
 
-const CLUSTER_ZOOM_MAX = 6;
+const DENSITY_CLUSTER_MIN = 4;
+
+const getDensityRadiusMeters = (zoom: number) => {
+  if (zoom <= 4) return 600000;
+  if (zoom === 5) return 400000;
+  if (zoom === 6) return 250000;
+  if (zoom === 7) return 150000;
+  if (zoom === 8) return 100000;
+  if (zoom === 9) return 60000;
+  if (zoom === 10) return 40000;
+  return 25000;
+};
+
+const getDensityClusterLimit = (zoom: number) => {
+  if (zoom <= 4) return 10;
+  if (zoom <= 6) return 12;
+  if (zoom <= 8) return 16;
+  return 24;
+};
 
 const CONTINENT_BY_COUNTRY_CODE: Record<string, string> = {
   US: "North America",
@@ -125,6 +140,84 @@ const computeGurdwaraCounts = (gurdwaras: GoogleMapsGurdwara[]) => {
   };
 };
 
+const buildDensityClusters = (
+  gurdwaras: GoogleMapsGurdwara[],
+  zoom: number,
+  bounds: google.maps.LatLngBounds | null
+) => {
+  if (!gurdwaras.length) return [];
+
+  const clusterLimit = getDensityClusterLimit(zoom);
+  const radiusMeters = getDensityRadiusMeters(zoom);
+
+  const points = gurdwaras
+    .filter((gurdwara) => {
+      const position = new google.maps.LatLng(gurdwara.latitude, gurdwara.longitude);
+      return !bounds || bounds.contains(position);
+    })
+    .map((gurdwara) => ({
+      lat: gurdwara.latitude,
+      lng: gurdwara.longitude,
+      city: `${gurdwara.city || "Unknown"}${gurdwara.state ? `, ${gurdwara.state}` : ""}`,
+      country: gurdwara.country || "Unknown",
+    }));
+
+  const visited = new Array(points.length).fill(false);
+  const clusters: {
+    latSum: number;
+    lngSum: number;
+    count: number;
+    cityCounts: Record<string, number>;
+    countryCounts: Record<string, number>;
+  }[] = [];
+
+  for (let i = 0; i < points.length; i += 1) {
+    if (visited[i]) continue;
+    visited[i] = true;
+    const cluster = {
+      latSum: points[i].lat,
+      lngSum: points[i].lng,
+      count: 1,
+      cityCounts: { [points[i].city]: 1 },
+      countryCounts: { [points[i].country]: 1 },
+    };
+
+    for (let j = i + 1; j < points.length; j += 1) {
+      if (visited[j]) continue;
+      const distance = google.maps.geometry.spherical.computeDistanceBetween(
+        new google.maps.LatLng(points[i].lat, points[i].lng),
+        new google.maps.LatLng(points[j].lat, points[j].lng)
+      );
+      if (distance <= radiusMeters) {
+        visited[j] = true;
+        cluster.latSum += points[j].lat;
+        cluster.lngSum += points[j].lng;
+        cluster.count += 1;
+        cluster.cityCounts[points[j].city] = (cluster.cityCounts[points[j].city] || 0) + 1;
+        cluster.countryCounts[points[j].country] = (cluster.countryCounts[points[j].country] || 0) + 1;
+      }
+    }
+
+    clusters.push(cluster);
+  }
+
+  const pickTop = (counts: Record<string, number>) =>
+    Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || "Unknown";
+
+  return clusters
+    .filter((entry) => entry.count >= DENSITY_CLUSTER_MIN)
+    .map((entry) => ({
+      city: pickTop(entry.cityCounts),
+      state: undefined,
+      country: pickTop(entry.countryCounts),
+      latitude: entry.latSum / entry.count,
+      longitude: entry.lngSum / entry.count,
+      gurdwara_count: entry.count,
+    }))
+    .sort((a, b) => b.gurdwara_count - a.gurdwara_count)
+    .slice(0, clusterLimit);
+};
+
 export default function Map() {
   const [mapData, setMapData] = useState<{ cities: SikhCity[] }>({
     cities: [],
@@ -137,6 +230,7 @@ export default function Map() {
   const [filteredGoogleMapsGurdwaras, setFilteredGoogleMapsGurdwaras] = useState<GoogleMapsGurdwara[]>([]);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const [mapZoom, setMapZoom] = useState(4);
+  const [mapBounds, setMapBounds] = useState<google.maps.LatLngBounds | null>(null);
   const [markers, setMarkers] = useState<{
     cityMarkers: google.maps.Marker[];
     googleMapsMarkers: google.maps.Marker[];
@@ -163,10 +257,6 @@ export default function Map() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Load existing city data
-        const cityResponse = await fetch("/gurdwara_data.json");
-        const cityData = await cityResponse.json();
-
         // Load Google Maps Gurdwaras
         let googleMapsList: GoogleMapsGurdwara[] = [];
         try {
@@ -179,10 +269,6 @@ export default function Map() {
           console.warn("Could not load Google Maps Gurdwaras data:", error);
         }
 
-        setMapData({
-          cities: cityData.topSikhCities,
-        });
-        setFilteredCities(cityData.topSikhCities);
         setGoogleMapsGurdwaras(googleMapsList);
         setFilteredGoogleMapsGurdwaras(googleMapsList);
       } catch (error) {
@@ -192,12 +278,22 @@ export default function Map() {
     loadData();
   }, []);
 
-  // Track map zoom level for clustering
+  useEffect(() => {
+    if (!googleMapsGurdwaras.length) return;
+    if (!mapBounds) return;
+    const densityCities = buildDensityClusters(googleMapsGurdwaras, mapZoom, mapBounds);
+    setMapData({ cities: densityCities });
+    setFilteredCities(densityCities);
+  }, [googleMapsGurdwaras, mapZoom, mapBounds]);
+
+  // Track map zoom and bounds for density clustering
   useEffect(() => {
     if (!mapInstance) return;
     setMapZoom(mapInstance.getZoom() ?? 4);
-    const listener = mapInstance.addListener("zoom_changed", () => {
+    setMapBounds(mapInstance.getBounds() ?? null);
+    const listener = mapInstance.addListener("idle", () => {
       setMapZoom(mapInstance.getZoom() ?? 4);
+      setMapBounds(mapInstance.getBounds() ?? null);
     });
     return () => {
       listener.remove();
@@ -259,16 +355,16 @@ export default function Map() {
     const showGoogleMaps = selectedLayers.googleMapsGurdwaras;
     const shouldCluster = false; // grouping disabled for now
 
-    // Add city markers
+    // Add city markers (density by gurdwara count)
     if (showCities) {
     filteredCities.forEach((city) => {
       const marker = new google.maps.Marker({
         position: { lat: city.latitude, lng: city.longitude },
         map: mapInstance,
-        title: `${city.city} - ${city.population_percentage}% Sikh`,
+        title: `${city.city} - ${city.gurdwara_count} Gurdwaras`,
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          scale: 8 + city.population_percentage / 2,
+          scale: Math.min(38, 10 + Math.pow(city.gurdwara_count, 0.35) * 9),
           fillColor: "#FF6B35",
           fillOpacity: 0.7,
           strokeColor: "#FFFFFF",
@@ -280,9 +376,9 @@ export default function Map() {
         content: `
           <div class="p-3 bg-background text-foreground rounded">
             <h3 class="font-bold text-lg">${city.city}</h3>
-            <p class="text-sm text-muted-foreground">${city.country}${city.state || city.province ? `, ${city.state || city.province}` : ""}</p>
-            <p class="font-semibold text-orange-500 mt-2">${city.population_percentage}% Sikh Population</p>
-            <p class="text-xs text-muted-foreground mt-2">${city.notes}</p>
+            <p class="text-sm text-muted-foreground">${city.country}</p>
+            <p class="font-semibold text-orange-500 mt-2">${city.gurdwara_count} Gurdwaras nearby</p>
+            <p class="text-xs text-muted-foreground mt-2">Density cluster based on Google Maps data</p>
           </div>
         `,
       });
@@ -463,15 +559,14 @@ export default function Map() {
                             <h3 className="font-semibold text-sm">{city.city}</h3>
                             <p className="text-xs text-muted-foreground">
                               {city.country}
-                              {city.state || city.province ? `, ${city.state || city.province}` : ""}
                             </p>
                           </div>
                           <Badge className="bg-orange-500 text-white shrink-0">
-                            {city.population_percentage}%
+                            {city.gurdwara_count}
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
-                          {city.notes}
+                          Density cluster from Google Maps
                         </p>
                       </CardContent>
                     </Card>
@@ -588,14 +683,14 @@ export default function Map() {
               <CardContent className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-orange-500 border-2 border-white shrink-0"></div>
-                  <span className="text-xs sm:text-sm">Sikh Population Centers</span>
+                  <span className="text-xs sm:text-sm">Gurdwara Density (Cities)</span>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-indigo-500 border-2 border-white shrink-0"></div>
                   <span className="text-xs sm:text-sm">Gurdwaras (Maps)</span>
                 </div>
                 <p className="text-xs text-muted-foreground pt-1 sm:pt-2">
-                  Circle size indicates population concentration percentage
+                  Circle size indicates relative gurdwara density
                 </p>
               </CardContent>
             </Card>
