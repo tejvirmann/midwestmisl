@@ -87,7 +87,7 @@ declare global {
 }
 
 const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY || import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-const MAPS_URL = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
+const MAPS_URL = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry,visualization`;
 
 function loadMapScript() {
   return new Promise((resolve, reject) => {
@@ -160,6 +160,7 @@ export function MapView({
       fullscreenControl: true,
       zoomControl: true,
       streetViewControl: true,
+      gestureHandling: "greedy",
       mapId: "DEMO_MAP_ID",
     });
     if (onMapReady) {
