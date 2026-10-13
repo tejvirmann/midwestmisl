@@ -87,7 +87,7 @@ declare global {
 }
 
 const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY || import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-const MAPS_URL = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
+const MAPS_URL = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=weekly`;
 
 function loadMapScript() {
   return new Promise((resolve, reject) => {
@@ -117,6 +117,8 @@ interface MapViewProps {
   initialCenter?: google.maps.LatLngLiteral;
   initialZoom?: number;
   onMapReady?: (map: google.maps.Map) => void;
+  /** Called when Google Maps can't load or rejects the key (quota exceeded, billing, referrer). */
+  onError?: () => void;
 }
 
 export function MapView({
@@ -124,15 +126,19 @@ export function MapView({
   initialCenter = { lat: 37.7749, lng: -122.4194 },
   initialZoom = 12,
   onMapReady,
+  onError,
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
 
   const init = usePersistFn(async () => {
+    // Google calls this global when the key is rejected or quota is exhausted.
+    (window as unknown as { gm_authFailure?: () => void }).gm_authFailure = () => onError?.();
     try {
       await loadMapScript();
     } catch (error) {
       console.error("Failed to load Google Maps:", error);
+      onError?.();
       if (mapContainer.current) {
         mapContainer.current.innerHTML = `
           <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">
@@ -159,7 +165,7 @@ export function MapView({
       mapTypeControl: true,
       fullscreenControl: true,
       zoomControl: true,
-      streetViewControl: true,
+      streetViewControl: false,
       gestureHandling: "greedy",
       mapId: "DEMO_MAP_ID",
     });

@@ -7,13 +7,19 @@ const ALLOWED_TYPES = new Set(["missing", "incorrect", "closed", "other"]);
 const clean = (value: unknown, max: number) =>
   typeof value === "string" ? value.replace(/[\u0000-\u001f\u007f]+/g, " ").trim().slice(0, max) : "";
 
-const hits = new Map<string, number[]>();
-function isRateLimited(ip: string, limit = 5, windowMs = 60 * 60 * 1000) {
+// Site-wide limit (not per IP): at most MAX_PER_HOUR submissions per hour in total.
+// Fast path: per-instance counter. Authoritative check: count recent submission PRs on GitHub,
+// which is shared across all serverless instances.
+const MAX_PER_HOUR = 5;
+const WINDOW_MS = 60 * 60 * 1000;
+const RATE_LIMIT_MESSAGE =
+  "We've reached our limit of 5 map submissions per hour across the whole site, to prevent spam. Please try again in a little while — thank you for helping!";
+let recent: number[] = [];
+
+function localLimitReached() {
   const now = Date.now();
-  const recent = (hits.get(ip) || []).filter((t) => now - t < windowMs);
-  recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > limit;
+  recent = recent.filter((t) => now - t < WINDOW_MS);
+  return recent.length >= MAX_PER_HOUR;
 }
 
 export default async function handler(
@@ -24,11 +30,8 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Best-effort per-instance rate limit (serverless instances don't share memory,
-  // so also enable Vercel Firewall rate limiting for a hard guarantee).
-  const ip = String(req.headers["x-forwarded-for"] || "unknown").split(",")[0].trim();
-  if (isRateLimited(ip)) {
-    return res.status(429).json({ error: "Too many submissions. Please try again later." });
+  if (localLimitReached()) {
+    return res.status(429).json({ error: RATE_LIMIT_MESSAGE });
   }
 
   try {
@@ -78,6 +81,28 @@ export default async function handler(
     }
 
     const octokit = new Octokit({ auth: githubToken });
+
+    // Count submission PRs opened in the last hour (shared across all instances).
+    try {
+      const { data: openPrs } = await octokit.rest.pulls.list({
+        owner,
+        repo,
+        state: "all",
+        sort: "created",
+        direction: "desc",
+        per_page: 20,
+      });
+      const cutoff = Date.now() - WINDOW_MS;
+      const ghRecent = openPrs.filter(
+        (pr) => pr.head.ref.startsWith("update-gurdwara-") && new Date(pr.created_at).getTime() > cutoff
+      );
+      if (ghRecent.length >= MAX_PER_HOUR) {
+        recent = ghRecent.map((pr) => new Date(pr.created_at).getTime());
+        return res.status(429).json({ error: RATE_LIMIT_MESSAGE });
+      }
+    } catch (error) {
+      console.warn("Could not check recent PRs for rate limiting", error);
+    }
 
     // Get current file content from GitHub
     let currentData: any;
@@ -258,6 +283,7 @@ ${formData.email ? `**Submitted by:** ${esc(formData.email)}` : ""}
       });
     }
 
+    recent.push(Date.now());
     res.json({
       message: "Update submitted successfully! Pull request created.",
       prUrl: pr.html_url,

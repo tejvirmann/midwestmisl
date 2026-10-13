@@ -81,6 +81,16 @@ export function UpdateGurdwaraForm({
         }),
       });
 
+      if (response.status === 429) {
+        const limited = await response.json().catch(() => ({}));
+        toast.error("Submission limit reached", {
+          description:
+            limited.error ||
+            "We limit submissions to 5 per hour across the site to prevent spam. Please try again later.",
+          duration: 10000,
+        });
+        return;
+      }
       if (!response.ok) {
         throw new Error("Failed to submit update");
       }

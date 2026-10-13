@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { MapView } from "@/components/Map";
 import { Search } from "lucide-react";
 import { UpdateMapButton } from "@/components/UpdateMapButton";
+import { MaintenanceNotice } from "@/components/MaintenanceNotice";
 import { createCanvasHeatmap, type CanvasHeatmap } from "@/lib/canvasHeatmap";
 
 interface GoogleMapsGurdwara {
@@ -74,6 +75,7 @@ const computeGurdwaraCounts = (gurdwaras: GoogleMapsGurdwara[]) => {
 
 
 export default function Map() {
+  const [mapDown, setMapDown] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [googleMapsGurdwaras, setGoogleMapsGurdwaras] = useState<GoogleMapsGurdwara[]>([]);
   const [filteredGoogleMapsGurdwaras, setFilteredGoogleMapsGurdwaras] = useState<GoogleMapsGurdwara[]>([]);
@@ -221,6 +223,11 @@ export default function Map() {
     );
     heatmapRef.current.setMap(selectedLayers.heatmap ? mapInstance : null);
   }, [mapInstance, googleMapsGurdwaras, selectedLayers.heatmap]);
+
+  // Manual switch: set VITE_MAINTENANCE_MODE=true in Vercel and redeploy.
+  if (import.meta.env.VITE_MAINTENANCE_MODE === "true" || mapDown) {
+    return <MaintenanceNotice />;
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -405,6 +412,7 @@ export default function Map() {
             <Card className="h-[400px] sm:h-[500px] md:h-[600px] lg:h-[800px] overflow-hidden">
               <MapView
                 className="w-full h-full"
+                onError={() => setMapDown(true)}
                 onMapReady={(map: google.maps.Map) => {
                   setMapInstance(map);
                   // Center map on North America
