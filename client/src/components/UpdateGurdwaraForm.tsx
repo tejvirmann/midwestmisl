@@ -44,6 +44,7 @@ interface FormData {
   country: string;
   details: string;
   email: string;
+  website?: string; // honeypot
 }
 
 export function UpdateGurdwaraForm({
@@ -288,6 +289,15 @@ export function UpdateGurdwaraForm({
                   <FormMessage />
                 </FormItem>
               )}
+            />
+
+            <input
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+              {...form.register("website")}
             />
 
             <DialogFooter>

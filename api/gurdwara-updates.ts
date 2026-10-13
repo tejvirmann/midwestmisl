@@ -1,23 +1,67 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Octokit } from "@octokit/rest";
 
+const ALLOWED_COUNTRIES = new Set(["USA", "Canada"]);
+const ALLOWED_TYPES = new Set(["missing", "incorrect", "closed", "other"]);
+
+const clean = (value: unknown, max: number) =>
+  typeof value === "string" ? value.replace(/[\u0000-\u001f\u007f]+/g, " ").trim().slice(0, max) : "";
+
+const hits = new Map<string, number[]>();
+function isRateLimited(ip: string, limit = 5, windowMs = 60 * 60 * 1000) {
+  const now = Date.now();
+  const recent = (hits.get(ip) || []).filter((t) => now - t < windowMs);
+  recent.push(now);
+  hits.set(ip, recent);
+  return recent.length > limit;
+}
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  // Only allow POST requests
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  try {
-    const formData = req.body;
+  // Best-effort per-instance rate limit (serverless instances don't share memory,
+  // so also enable Vercel Firewall rate limiting for a hard guarantee).
+  const ip = String(req.headers["x-forwarded-for"] || "unknown").split(",")[0].trim();
+  if (isRateLimited(ip)) {
+    return res.status(429).json({ error: "Too many submissions. Please try again later." });
+  }
 
-    // Validate required fields
-    if (!formData.gurdwaraName || !formData.city || !formData.country) {
-      return res.status(400).json({
-        error: "Missing required fields",
-      });
+  try {
+    const body = req.body && typeof req.body === "object" ? req.body : {};
+
+    // Honeypot: real users never fill this hidden field.
+    if (body.website) {
+      return res.json({ success: true, message: "Update received." });
+    }
+
+    const formData = {
+      updateType: clean(body.updateType, 20),
+      gurdwaraName: clean(body.gurdwaraName, 200),
+      address: clean(body.address, 300),
+      city: clean(body.city, 100),
+      stateProvince: clean(body.stateProvince, 100),
+      country: clean(body.country, 20),
+      details: clean(body.details, 2000),
+      email: clean(body.email, 200),
+      timestamp: new Date().toISOString(),
+    };
+
+    if (
+      !formData.gurdwaraName ||
+      !formData.city ||
+      !formData.stateProvince ||
+      !ALLOWED_COUNTRIES.has(formData.country) ||
+      !ALLOWED_TYPES.has(formData.updateType)
+    ) {
+      return res.status(400).json({ error: "Missing or invalid fields" });
+    }
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      return res.status(400).json({ error: "Invalid email" });
     }
 
     // Get GitHub credentials from environment
@@ -74,7 +118,6 @@ export default async function handler(
         console.error("Error reading file from GitHub:", error);
         return res.status(500).json({
           error: "Failed to read current data from repository",
-          details: error.message,
         });
       }
     }
@@ -120,7 +163,6 @@ export default async function handler(
       console.error("Error getting base branch:", error);
       return res.status(500).json({
         error: "Failed to get base branch",
-        details: error.message,
       });
     }
 
@@ -148,14 +190,12 @@ export default async function handler(
           console.error("Error creating branch:", retryError);
           return res.status(500).json({
             error: "Failed to create branch",
-            details: retryError.message,
           });
         }
       } else {
         console.error("Error creating branch:", error);
         return res.status(500).json({
           error: "Failed to create branch",
-          details: error.message,
         });
       }
     }
@@ -178,25 +218,25 @@ export default async function handler(
       console.error("Error updating file:", error);
       return res.status(500).json({
         error: "Failed to update file in repository",
-        details: error.message,
       });
     }
 
     // Create pull request
     const prTitle = `${formData.updateType === "missing" ? "Add" : "Update"} Gurdwara: ${formData.gurdwaraName}`;
+    const esc = (v: string) => v.replace(/[<>@`]/g, (c) => `\\${c}`);
     const prBody = `
 ## Gurdwara Update Submission
 
-**Type:** ${formData.updateType}
-**Gurdwara Name:** ${formData.gurdwaraName}
-**Location:** ${formData.city}, ${formData.stateProvince}, ${formData.country}
-${formData.address ? `**Address:** ${formData.address}` : ""}
+**Type:** ${esc(formData.updateType)}
+**Gurdwara Name:** ${esc(formData.gurdwaraName)}
+**Location:** ${esc(formData.city)}, ${esc(formData.stateProvince)}, ${esc(formData.country)}
+${formData.address ? `**Address:** ${esc(formData.address)}` : ""}
 
 **Details:**
-${formData.details}
+${esc(formData.details)}
 
-${formData.email ? `**Submitted by:** ${formData.email}` : ""}
-**Timestamp:** ${formData.timestamp || new Date().toISOString()}
+${formData.email ? `**Submitted by:** ${esc(formData.email)}` : ""}
+**Timestamp:** ${formData.timestamp}
     `.trim();
 
     let pr;
@@ -214,7 +254,6 @@ ${formData.email ? `**Submitted by:** ${formData.email}` : ""}
       console.error("Error creating pull request:", error);
       return res.status(500).json({
         error: "Failed to create pull request",
-        details: error.message,
         note: "The branch and file update may have been created successfully. Please check your repository.",
       });
     }
@@ -229,7 +268,6 @@ ${formData.email ? `**Submitted by:** ${formData.email}` : ""}
     console.error("Error creating PR:", error);
     res.status(500).json({
       error: "Failed to create pull request",
-      message: error.message,
     });
   }
 }

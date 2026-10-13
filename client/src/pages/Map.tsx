@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { MapView } from "@/components/Map";
 import { Search } from "lucide-react";
 import { UpdateMapButton } from "@/components/UpdateMapButton";
+import { createCanvasHeatmap, type CanvasHeatmap } from "@/lib/canvasHeatmap";
 
 interface GoogleMapsGurdwara {
   name: string;
@@ -30,6 +31,11 @@ const CONTINENT_BY_COUNTRY_CODE: Record<string, string> = {
   GB: "Europe",
   AU: "Oceania",
 };
+
+const escapeHtml = (value: string) =>
+  value.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+
+const safeUrl = (url: string) => (/^https?:\/\//i.test(url) ? escapeHtml(url) : "");
 
 const computeGurdwaraCounts = (gurdwaras: GoogleMapsGurdwara[]) => {
   const hemispheres = { north: 0, south: 0, east: 0, west: 0 };
@@ -72,7 +78,7 @@ export default function Map() {
   const [googleMapsGurdwaras, setGoogleMapsGurdwaras] = useState<GoogleMapsGurdwara[]>([]);
   const [filteredGoogleMapsGurdwaras, setFilteredGoogleMapsGurdwaras] = useState<GoogleMapsGurdwara[]>([]);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-  const heatmapRef = useRef<google.maps.visualization.HeatmapLayer | null>(null);
+  const heatmapRef = useRef<CanvasHeatmap | null>(null);
   const [markers, setMarkers] = useState<{
     googleMapsMarkers: google.maps.Marker[];
   }>({
@@ -165,11 +171,11 @@ export default function Map() {
       const infoWindow = new google.maps.InfoWindow({
         content: `
               <div class="p-3 bg-background text-foreground rounded max-w-sm">
-                <h3 class="font-bold text-lg mb-2">${gurdwara.name}</h3>
-                ${gurdwara.address ? `<p class="text-sm font-medium mt-1 mb-2">📍 ${gurdwara.address}</p>` : ""}
-                <p class="text-sm text-muted-foreground mb-3">${gurdwara.city}, ${gurdwara.state}, ${gurdwara.country}</p>
-                ${gurdwara.place_url ? `
-                  <a href="${gurdwara.place_url}" target="_blank" rel="noopener noreferrer" 
+                <h3 class="font-bold text-lg mb-2">${escapeHtml(gurdwara.name)}</h3>
+                ${gurdwara.address ? `<p class="text-sm font-medium mt-1 mb-2">📍 ${escapeHtml(gurdwara.address)}</p>` : ""}
+                <p class="text-sm text-muted-foreground mb-3">${escapeHtml(`${gurdwara.city}, ${gurdwara.state}, ${gurdwara.country}`)}</p>
+                ${safeUrl(gurdwara.place_url) ? `
+                  <a href="${safeUrl(gurdwara.place_url)}" target="_blank" rel="noopener noreferrer" 
                      class="inline-block mt-2 px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white text-sm rounded-md transition-colors">
                     View on Google Maps →
                   </a>
@@ -204,21 +210,15 @@ export default function Map() {
 
   // Heatmap layer
   useEffect(() => {
-    if (!mapInstance || !window.google?.maps?.visualization) return;
+    if (!mapInstance || !window.google?.maps) return;
 
     if (!heatmapRef.current) {
-      heatmapRef.current = new google.maps.visualization.HeatmapLayer({
-        data: [],
-        dissipating: true,
-        radius: 25,
-        opacity: 0.6,
-      });
+      heatmapRef.current = createCanvasHeatmap({ radius: 25, opacity: 0.6 });
     }
 
-    const heatmapData = googleMapsGurdwaras.map(
-      (gurdwara) => new google.maps.LatLng(gurdwara.latitude, gurdwara.longitude)
+    heatmapRef.current.setData(
+      googleMapsGurdwaras.map((g) => ({ lat: g.latitude, lng: g.longitude }))
     );
-    heatmapRef.current.setData(heatmapData);
     heatmapRef.current.setMap(selectedLayers.heatmap ? mapInstance : null);
   }, [mapInstance, googleMapsGurdwaras, selectedLayers.heatmap]);
 
