@@ -166,7 +166,7 @@ export function MapView({
       fullscreenControl: true,
       zoomControl: true,
       streetViewControl: false,
-      gestureHandling: "greedy",
+      gestureHandling: "auto",
       mapId: "DEMO_MAP_ID",
     });
     if (onMapReady) {

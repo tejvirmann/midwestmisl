@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Home, MapPin, Sun, Moon } from "lucide-react";
+import { Home, MapPin, Sun, Moon, Github } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 
@@ -18,27 +18,28 @@ export function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-orange-500">
+            <h1 className="text-xl sm:text-2xl font-bold text-orange-500">
               Midwest Misl
             </h1>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location === item.path;
               return (
                 <Link
                   key={item.path}
+                  aria-label={item.label}
                   href={item.path}
                   className={cn(
-                    "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors",
+                    "flex items-center gap-2 px-2 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors",
                     isActive
                       ? "bg-orange-500/10 text-orange-500"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
                 >
                   <Icon className="h-4 w-4" />
-                  {item.label}
+                  <span className="hidden sm:inline">{item.label}</span>
                 </Link>
               );
             })}
@@ -47,7 +48,7 @@ export function Navigation() {
                 variant="ghost"
                 size="icon"
                 onClick={toggleTheme}
-                className="ml-2"
+                className="sm:ml-2"
                 aria-label="Toggle theme"
               >
                 {theme === "light" ? (
@@ -57,6 +58,16 @@ export function Navigation() {
                 )}
               </Button>
             )}
+            <Button variant="ghost" size="icon" asChild>
+              <a
+                href="https://github.com/tejvirmann/midwestmisl"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View source on GitHub"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+            </Button>
           </div>
         </div>
       </div>
